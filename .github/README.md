@@ -42,3 +42,5 @@ ln -s ~/anycross-guide/skills/feishu-anycross ~/.codex/skills/feishu-anycross
 ## 说明
 
 非官方整理，和飞书没有隶属关系。平台会更新，和当前界面冲突时以界面为准。勘误见 [贡献说明](CONTRIBUTING.md)。许可证 MIT，见 [LICENSE](../LICENSE)，第三方资料的权利见 [NOTICE](../skills/feishu-anycross/references/guide/NOTICE.md)。
+
+觉得有用，可以在 [爱发电](https://afdian.com/a/garyzheng) 请我喝杯咖啡。
