@@ -211,7 +211,7 @@ variable.pageToken
   - 校验 0 错不等于能跑：它不查分支条件的操作符名（见下面「不为空」那条）。写完至少点一次「调试」，看调试接口的返回。
 - 调试接口：点「调试」时页面发 `POST /webapi/projects/<项目ID>/flows/<流程ID>/debug`，请求体 `{triggerOutput: "<触发器输出的 JSON 文字>", variableGroupId}`，成功回 `data.flowInstanceId`。预检不过也回 HTTP 200，错误码和原因只在 body 的 `code`、`msg` 里，界面不弹提示，看着像点了没反应。要看原因，先在页面里包一层 `fetch`，把这个接口的返回存下来再点。（实测，2026-11-12）
   - 想测空列表、没带参数这类少见的输入，别在弹窗的代码框里打字（会自动补括号引号）。同样在包的那层 `fetch` 里，把请求体的 `triggerOutput` 换成自己拼好的 JSON 文字再发出去。调试一样会真的写表，只造不写表或写回原值的输入。（实测，2026-11-12）
-- 发布：界面点「发布」时依次调 `POST /webapi/flows/<流程ID>/v2/validate_variable`、`POST /webapi/flows/<流程ID>/v2/validate`（请求体 `{"isPublish": true, "validateMode": 1}`，要 0 条），再 `POST /webapi/projects/<项目ID>/flows/<流程ID>/publish`，请求体 `{description}`，写接口都带 `x-csrf-token`。发布就是启用，弹窗原话是「发布后，工作流将开始运行」；读回 `isPublished`、`isEnabled` 都是 true，`latestVersion.id` 换成新的。发完拿 `GET /webapi/flows/<流程ID>/versions/<版本ID>` 和草稿逐个节点比一次。（实测，2026-11-12，发了 6 条）
+- 发布：界面点「发布」时依次调 `POST /webapi/flows/<流程ID>/v2/validate_variable`、`POST /webapi/flows/<流程ID>/v2/validate`（请求体 `{"isPublish": true, "validateMode": 1}`，要 0 条），再 `POST /webapi/projects/<项目ID>/flows/<流程ID>/publish`，请求体 `{description}`，写接口都带 `x-csrf-token`。发布就是启用，弹窗原话是「发布后，工作流将开始运行」；读回 `isPublished`、`isEnabled` 都是 true，`latestVersion.id` 换成新的。发完拿 `GET /webapi/flows/<流程ID>/versions/<版本ID>` 和草稿逐个节点比一次。（实测，2026-11-12，发了 6 条）已发布的流程再发一次新版本也是这个接口；回 `code 0` 后马上读，`latestVersion.id` 还是旧的，等几秒才换成新的，别当成没发上又发一遍。（实测，2026-11-13）
 - 停用、启用：`POST /webapi/flows/<流程ID>/disable` 或 `/enable`，请求体 `{}`。只改开关，版本号不变。停用不打断正在跑的那次运行，它照样跑到底。（实测，2026-11-12）
 - 没发布或已停用的流程，网址触发器回 HTTP 404，body 是 `{"code":"3","message":"not found"}`，平台不留运行记录，盯着它的告警也不会响。调用方调到这种地址就是悄悄失败，所以先确认被调的流程已发布、已启用，再改调用方。（实测，2026-11-12）
 - 把本机文件交给页面：在页面里插一个 `<input type=file>`，用浏览器工具的上传功能把文件放进去，再用 `files[0].text()` 读出来。十几 KB 的 JSON 这样传，比直接贴进代码稳。
@@ -238,7 +238,7 @@ variable.pageToken
 **新建流程、改名、补回调地址（实测，2026-11-12：在一个项目里用接口建了 17 条，全部校验通过）**
 
 - 新建：`POST /webapi/projects/<项目ID>/flows`，请求体 `{name, desc, connectorID: <触发器的连接器 ID>, createTo: <文件夹在文件树里的 id>}`，返回 `data.flowID`。带了 `createTo` 就直接建在那个文件夹里。建出来的草稿只有一个默认触发器：定时触发器默认是「每天」，网址触发器默认是「异步网址触发器」。
-- 改名、改描述：`PATCH /webapi/projects/<项目ID>/flows/<流程ID>`，请求体 `{name, desc}`。流程描述写 135 字也能存。
+- 改名、改描述：`PATCH /webapi/projects/<项目ID>/flows/<流程ID>`，请求体 `{name, desc}`。流程描述写 266 字也能存。读回时字段叫 `description`（不是 `desc`），改完要等几秒才读得到新的；连着改两条时第二条回过一次 `code 10`，隔一会儿重试就成了。改描述不换版本号。（实测，2026-11-13）
 - 用接口建的网址触发器没有回调地址，校验会报 `errorEmptyWebhookURL`。办法是先调 `GET /webapi/trigger/webhook?flowId=<流程ID>` 取 `data.webhook`（界面切换触发器类型时调的就是它），再写进触发器的 `parameters`：`{webhook, body_type: "json", authorization_config: {authorization_method: 0}}`。回调地址就是钥匙，只在页面里传，不要打印。
 - 间隔触发：`operationId` 换成「间隔触发」那个，`parameters.cronjob` 写 `{trigger_type: "INTERVAL_TRIGGER", interval_trigger_type: "min", interval_trigger_frequency: 15, timezone: "Asia/Shanghai", trigger_day: []}`。不写时区，就是界面默认的 `America/Los_Angeles`。界面上「触发器生效期」默认是「发布后两年内」。
 - 告警流程：新建时 `connectorID` 填告警触发器的连接器 ID。`parameters.alertRules` 照抄一条已有的规则，只改三处：
