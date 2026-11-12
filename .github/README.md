@@ -18,6 +18,7 @@ Claude Code 2.1.275 以前的版本分两步：先 `claude plugin marketplace ad
 
 ```bash
 git clone https://github.com/garyzheng0714-lang/lark-anycross.git ~/lark-anycross
+mkdir -p ~/.codex/skills
 ln -s ~/lark-anycross/skills/lark-anycross ~/.codex/skills/lark-anycross
 ```
 
