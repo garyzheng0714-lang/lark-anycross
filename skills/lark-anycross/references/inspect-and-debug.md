@@ -34,7 +34,8 @@
 
 请求体字段：`timeRange{left,right}`（毫秒）、`projectList`、`flowList`、`status`、`pageSize`、`page`、`asc`、`debug:false`。请求头只要 `content-type: application/json`。（实测）
 
-- `projectList` 必须是二维数组 `[["<项目ID>"]]`。写成一维会报 `cannot unmarshal string into []string`。
+- `projectList` 必须是二维数组 `[["<项目ID>"]]`。写成一维会报 `cannot unmarshal string into []string`。查多个项目，全放进同一个内层数组 `[["<项目1>","<项目2>"]]`；写成 `[["<项目1>"],["<项目2>"]]` 返回 0 条。不带 `projectList` 返回「参数无效」。（实测，2026-11-12）
+- 算全租户同时在跑几个：拉一段时间所有项目的运行记录，按 `startAt`、`endAt` 排成进出事件扫一遍，同时在跑的最大数就是峰值。突然冒出几万次运行的流程，也是这样一眼看出来的。（实测，2026-11-12）
 - `count` 最多 10000，超过时 `tooMany=true`，按时间段或项目拆开查。
 - 每条有 `flowName`、`flowDisabled`、`projectName`、`status`、`statusCode`、`cost`、`errorCnt`。
 - 日志实际留约 32 天，文档写 30 天。「监控」页（`/webapi/dashboard/runStates`）也一样，查 40～400 天前整个租户全是 0。所以 32 天以前的最后运行时间哪里都查不到，只能写「无」，再附草稿 `updatedAt`（最后修改）估计闲置多久。（实测，2026-11）
