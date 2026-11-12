@@ -208,6 +208,9 @@ variable.pageToken
   - 两个值都要先转成文字。
   - 写入会整个覆盖草稿，所以先把读到的旧定义存一份。
 - 写完校验：`POST /webapi/flows/<流程ID>/v2/validate`，请求体 `{"isPublish": false, "validateMode": 1}`。`data.results` 按节点列出问题，比如没选凭证是 `errorRequireCredentials`。
+  - 校验 0 错不等于能跑：它不查分支条件的操作符名（见下面「不为空」那条）。写完至少点一次「调试」，看调试接口的返回。
+- 调试接口：点「调试」时页面发 `POST /webapi/projects/<项目ID>/flows/<流程ID>/debug`，请求体 `{triggerOutput: "<触发器输出的 JSON 文字>", variableGroupId}`，成功回 `data.flowInstanceId`。预检不过也回 HTTP 200，错误码和原因只在 body 的 `code`、`msg` 里，界面不弹提示，看着像点了没反应。要看原因，先在页面里包一层 `fetch`，把这个接口的返回存下来再点。（实测，2026-11-12）
+  - 想测空列表、没带参数这类少见的输入，别在弹窗的代码框里打字（会自动补括号引号）。同样在包的那层 `fetch` 里，把请求体的 `triggerOutput` 换成自己拼好的 JSON 文字再发出去。调试一样会真的写表，只造不写表或写回原值的输入。（实测，2026-11-12）
 - 把本机文件交给页面：在页面里插一个 `<input type=file>`，用浏览器工具的上传功能把文件放进去，再用 `files[0].text()` 读出来。十几 KB 的 JSON 这样传，比直接贴进代码稳。
 - 触发器沿用草稿里原有的那个：读出来，改个名字，再放回去，这样界面上设的字段不会丢。
 - 凭证：节点上选好凭证后，草稿里写的是 `auth.credentials: {type: "cred", value: "<13 位短引用>"}`，`auth.key` 仍然是空的。短引用不是口令本身，可以写进本机的生成脚本，这样重新写草稿时凭证不会被清掉。换了凭证要重新读一次。（实测，2026-11-12）
@@ -258,10 +261,13 @@ variable.pageToken
   - `defaultStrategy` 写 `{action: "retry", retryFallbackAction: "branch"}`。
   - structure 里，在这一步的 `subSteps` 放 `{id: "<步骤ID>.error_handler.default", type: "error_handler_branch", subSteps: [分支里的节点]}`。
   - steps 里也要有一个同 ID 的空节点：`{id, type: "error_handler_branch", operation: {}, name: "", description: "", auth: {key: "", parameters: null, credentials: null}, parameters: null}`。
-- 分支条件「不为空」写 `{operator: "isNotEmpty", comparison: {type: "object", value: {left: <引用>}}}`，不用写 `right`。左边引用流程变量时，`node_tree` 要写 `flow_variable`；写成 `json_path` 的 `$.variable.<名>` 会报 `errorJsonpathUnknown`。（实测，2026-11-12）
+- 分支条件「不为空」写 `{operator: "notEmpty", comparison: {type: "object", value: {left: <引用>}}}`，不用写 `right`。这里以前写成 `isNotEmpty`，是错的。左边引用流程变量时，`node_tree` 要写 `flow_variable`；写成 `json_path` 的 `$.variable.<名>` 会报 `errorJsonpathUnknown`。（实测，2026-11-12）
+- 分支条件的操作符名，校验接口不查。前端代码里能用的只有：`equals` `notEqual` `contains` `notContains` `aiJudge` `beginWith` `notBeginWith` `endWith` `notEndWith` `greaterThan` `greaterEqual` `lessThan` `lessEqual` `isEmpty` `notEmpty` `isPresent` `notPresent` `isTrue` `isFalse`。写成别的（例如 `isNotEmpty`），校验 0 错，点「调试」却跑不起来：调试接口回 `code: 3412`「branch-108节点的分支条件语法错误」，界面不提示。2026-11-12 一次写的 16 条草稿都是这样，改成 `notEmpty` 后调试能跑。发布时会不会也拒，没试。（列表出自前端代码；被拒和改后能跑是实测）
+- `notEmpty` 只看有没有这个值，不看内容：网址参数没带 → 判为空；带了但是空字符串 `""` → 判为不为空；流程变量是空数组 `[]` → 也判为不为空。要挡空字符串、空数组，后面的脚本自己再判一次，别只靠这个分支。（实测，2026-11-12，各调试一次）
+- While 的条件一开始就是 false，一圈都不进，不会先跑一圈再判断。（实测，2026-11-12）
 - 延迟节点的 `time_unit` 填的是秒数，可以带小数，老流程用 2.6。等 N 分钟的子流程，老流程是这样写的，照抄能通过校验：While 条件写死 `true`，每圈放一个 2.6 秒的延迟；分支拿 `$.while-1.index` 和圈数比，够数了走「终止」结束子流程。（实测，2026-11-12）
 - 新建「子流程触发」的流程，`connectorID` 填 `7205887880971599873`。子流程触发和网址触发可以在草稿里互相换：换成网址触发时，先用 `GET /webapi/trigger/webhook?flowId=` 取回调地址再填进去。两种都校验通过。（实测，2026-11-12）
-- 用接口写草稿时，不要同时开着这条流程的编辑页。编辑页自己存着一份草稿，比如切换触发器时，它会把整份草稿 PUT 回去，盖掉你刚写进去的。
+- 用接口写草稿时，不要同时开着这条流程的编辑页。编辑页自己存着一份草稿，比如切换触发器时，它会把整份草稿 PUT 回去，盖掉你刚写进去的。点「调试」也会先把编辑页那份 PUT 一次再跑（实测，2026-11-12）。所以用接口改完，先退出编辑页，重新打开再点「调试」，跑完到别的页面读回草稿，确认和本机那份一样。
 - 运行时的几条规矩（实测，2026-11-12，在一条没上线的草稿里放试验节点，调试跑了两次）：
   - 脚本里 `throw` 会让节点失败，错误码 300000。错误处理是「终止」时，整次运行失败，后面的节点不跑，告警流程能收到。
   - 走到「结束」（终止）节点，整次运行算成功（状态码 2001），不触发按「运行失败」触发的告警。老「延迟 10 分钟」靠它结束，32 天 4456 次运行全是成功。要「悄悄停下」就用它；要让告警接到，就让节点报错并把错误处理设成「终止」。（实测，2026-11-12）
