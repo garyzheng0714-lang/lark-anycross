@@ -159,7 +159,8 @@ variable.pageToken
 3. 每条 `GET /webapi/v2/flows/<工作流ID>`：看 `isPublished`、`isEnabled`；`draft.definition` 再 parse 一次得 `steps[]`，`steps[].operation` 是对象 `{connectorId, operationId}`。网址触发器的 `hook.hookKey` 为空，回调地址不在定义里。
 4. 每条查 32 天运行次数：`POST /webapi/flow_log/search_flow_log`，`flowList: [["<工作流ID>"]]`、`pageSize: 1`，取 `count`；失败数再加 `status: [["failed"]]`。没有记录时返回 `code 15100002`，按 0 次算。`status` 写成一维数组、字符串或数字都返回 `15000000`。
    查不到 32 天以前的最后运行时间：日志最早只到约 32 天前，「监控」页（`/webapi/dashboard/runStates`）查 40～400 天前整个租户也全是 0，两处都没有更早的数据。名单里这类流程的最后运行写「无」，另附草稿的最后修改日期（`updatedAt`）估计闲置多久。（实测，2026-11）
-   看一次运行里每个节点的入参和出参：`POST /webapi/flow_log/search_node_log`，请求体 `{flowInstanceID, pageSize: 100, page}`，返回 `nodeLogList[]`（`nodeID`、`input`、`output`、`cost`）。`flowInstanceID` 从 `flowLogList` 里拿。能用它数出每次运行实际写了多少行。（实测，2026-11-12）
+   看一次运行里每个节点的入参和出参：`POST /webapi/flow_log/search_node_log`，请求体 `{flowInstanceID, pageSize: 100, page}`，返回 `nodeLogList[]`（`nodeID`、`input`、`output`、`cost`）。`flowInstanceID` 从 `flowLogList` 里拿。能用它数出每次运行实际写了多少行。点「调试」跑出来的运行，查运行日志和节点日志都要带 `debug: true`，否则查不到。（实测，2026-11-12）
+   想试一个平台行为（例如批量写遇错是不是整批不写、数据存储读不到给什么），又不想动正式流程：建一张测试表，借一条没上线、不写正式数据的草稿，先把它的草稿定义存一份，再用 `PUT /webapi/projects/-/flows/<工作流ID>/draft` 临时放进测试节点，点「调试」跑一次，用节点日志看每个节点的出参，最后把存的那份原样写回，校验并读回比对。子流程触发的草稿点「编辑」→「调试」，弹窗里不用填参数直接「调试」。写草稿前先离开这条流程的编辑页，免得编辑器自动保存把你写的盖掉。（实测，2026-11-12）
    把一条流程 32 天的运行按日期和耗时排一排，能看出隐藏的定时调用：某条网址触发的流程每周六 03:00 起连跑 356 次、每次约 1 分钟，就是外部每周调它一次，它再自己一页页往下调。翻页翻过总数会返回重复记录，按 `flowInstanceID` 去重。（实测，2026-11-12）
    `pageSize` 最大 100，填 200 返回 `10000006 参数无效`。`asc: true` 也照样新的在前，按 `startAt` 自己排。（实测，2026-11-12）
    查定时有没有漏跑：把一条定时流程 32 天的开始时间排好，算相邻两次的间隔，超过中位数 1.5 倍的就是漏跑或停跑；再按天数一下这条流程和整个租户的次数，租户那天有日志而它是 0，就是真没跑，不是日志丢了。（实测，2026-11-12）
