@@ -211,6 +211,9 @@ variable.pageToken
   - 校验 0 错不等于能跑：它不查分支条件的操作符名（见下面「不为空」那条）。写完至少点一次「调试」，看调试接口的返回。
 - 调试接口：点「调试」时页面发 `POST /webapi/projects/<项目ID>/flows/<流程ID>/debug`，请求体 `{triggerOutput: "<触发器输出的 JSON 文字>", variableGroupId}`，成功回 `data.flowInstanceId`。预检不过也回 HTTP 200，错误码和原因只在 body 的 `code`、`msg` 里，界面不弹提示，看着像点了没反应。要看原因，先在页面里包一层 `fetch`，把这个接口的返回存下来再点。（实测，2026-11-12）
   - 想测空列表、没带参数这类少见的输入，别在弹窗的代码框里打字（会自动补括号引号）。同样在包的那层 `fetch` 里，把请求体的 `triggerOutput` 换成自己拼好的 JSON 文字再发出去。调试一样会真的写表，只造不写表或写回原值的输入。（实测，2026-11-12）
+- 发布：界面点「发布」时依次调 `POST /webapi/flows/<流程ID>/v2/validate_variable`、`POST /webapi/flows/<流程ID>/v2/validate`（请求体 `{"isPublish": true, "validateMode": 1}`，要 0 条），再 `POST /webapi/projects/<项目ID>/flows/<流程ID>/publish`，请求体 `{description}`，写接口都带 `x-csrf-token`。发布就是启用，弹窗原话是「发布后，工作流将开始运行」；读回 `isPublished`、`isEnabled` 都是 true，`latestVersion.id` 换成新的。发完拿 `GET /webapi/flows/<流程ID>/versions/<版本ID>` 和草稿逐个节点比一次。（实测，2026-11-12，发了 6 条）
+- 停用、启用：`POST /webapi/flows/<流程ID>/disable` 或 `/enable`，请求体 `{}`。只改开关，版本号不变。停用不打断正在跑的那次运行，它照样跑到底。（实测，2026-11-12）
+- 没发布或已停用的流程，网址触发器回 HTTP 404，body 是 `{"code":"3","message":"not found"}`，平台不留运行记录，盯着它的告警也不会响。调用方调到这种地址就是悄悄失败，所以先确认被调的流程已发布、已启用，再改调用方。（实测，2026-11-12）
 - 把本机文件交给页面：在页面里插一个 `<input type=file>`，用浏览器工具的上传功能把文件放进去，再用 `files[0].text()` 读出来。十几 KB 的 JSON 这样传，比直接贴进代码稳。
 - 触发器沿用草稿里原有的那个：读出来，改个名字，再放回去，这样界面上设的字段不会丢。
 - 凭证：节点上选好凭证后，草稿里写的是 `auth.credentials: {type: "cred", value: "<13 位短引用>"}`，`auth.key` 仍然是空的。短引用不是口令本身，可以写进本机的生成脚本，这样重新写草稿时凭证不会被清掉。换了凭证要重新读一次。（实测，2026-11-12）
