@@ -1,0 +1,262 @@
+# Computer Use 操作手册
+
+适用于用户明确指定的练习项目。当前资料日期：2026-09-21。
+
+证据标记：**界面观察**表示本次只读看到了该状态；**官方步骤**表示来自官方操作文档；**待实操**表示尚未实际执行。以下涉及修改、运行和发布的步骤是后续执行规范，不是本次已执行事项。
+
+## 1. 进入正确项目
+
+1. 打开指定项目 URL，核对路径中的项目 ID 与用户指定项目一致。
+2. 核对左上角“当前项目”与用户指定项目一致。本次研究开始和结束时均为“工作流（0）”。
+3. 确认当前是项目首页、工作流只读页还是编辑页。项目首页的“新建工作流”、模板“使用”与“预览”不同。
+4. 只读研究可打开“预览”，不能用“使用模板”代替预览。不要从浏览器已有标签页跳进其他业务工作流操作。
+5. 浏览器扩展开的标签页在它自己的标签组里，用户在自己的窗口里看不到。要用户亲手填密码、点确认时，用 `open -a "Google Chrome" <地址>` 在用户的 Chrome 里另开一页，并把地址复制进剪贴板（实测，2026-11-11）。
+
+## 2. 识别画布和组件样式
+
+**界面观察：**普通节点包含图标、显示名称和实例标识符。模板中的 `组装卡片消息内容` 是业务显示名称，`card_helper-1` 是实例标识符；`发送卡片消息` 对应 `im-1`。后续表达式必须引用真实实例，不以显示名称推断标识符。
+
+| 可见对象 | 识别方式 | 操作含义 |
+|---|---|---|
+| 触发器 | 流程顶部、触发器图标与名称 | 决定启动方式 |
+| 普通动作 | 图标块、名称和实例 ID | 单击查看右侧配置 |
+| 选中节点 | 强调色外框 | 右侧面板应该随之变化 |
+| 箭头线 | 从上游指向下游 | 表示流程路径，不表示所有字段已映射 |
+| 循环 | 循环图标、循环体及返回路径 | 区分循环内部节点与循环结束后的节点 |
+| 分支 | 分出的路径及条件 | 路径顺序和条件决定执行，颜色不是条件 |
+| 胶囊 | 输入框内的结构化引用块 | 引用节点出参、变量或配置 |
+| 灰色／禁用控件 | 预览面板或当前不可编辑状态 | 不能据此判断组件不支持该能力 |
+
+组件手册提供官方图示入口，不能直接复用其中屏幕坐标；公开版仅保留观察结论。
+
+## 3. 新建与编辑工作流
+
+**官方步骤；待实操。**在指定练习项目 内选择新建工作流，输入名称并选择触发器。创建后进入流程预览，点击“编辑”进入设计页；“完成”用于退出编辑回到只读。
+
+建立前先确定触发方式和最小输入结构。若只是调试学习，手动触发器可用于调试；若计划发布，需选择可发布的触发器。模板创建后，还需核对凭证、项目配置、卡片模板、表格、子流程等资源依赖。
+
+不要假设“完成”或离开页面代表发布。是否自动保存、撤销边界和导入行为未在本次实操验证，遇到重要改动应以当前页面明确状态为准。
+
+## 4. 添加和拖拽组件
+
+**官方步骤；待实操。**有两种入口：画布上的 `+`，或从连接器列表拖入画布。
+
+1. 找到要插入的上游／下游节点，确认插入位置属于主路径、指定分支还是循环体。
+2. 优先点击目标位置的 `+`，搜索组件并选择。使用拖拽时，从连接器列表中的实际卡片拖到目标插入区，观察当前画布给出的落点提示后释放。
+3. 选择组件内的**具体操作**，不要停在只添加组件。
+4. 单击新节点，核对业务名称、实例标识符、操作和版本。
+5. 查看箭头路径是否连接到预期节点；若落在错误分支或循环外部，应先修正位置，再配置数据。
+
+Computer Use 不能使用这份手册记录的旧坐标直接拖拽。每次需从当前截图确定起点、落点和缩放状态。画布缩放、侧栏展开和窗口尺寸都会改变坐标。
+
+## 5. 配置操作、凭证和版本
+
+1. “操作”标签中按原操作名称搜索并选择；同名相似动作要查手册描述，如创建／更新、查询单条／列出列表、同步／异步。
+2. 需要认证时，在“凭证”中选择目标身份。不要将“批量应用”当成单节点修改。
+3. 记录当前版本。模板中的旧版本不能用文档最新版本字段直接覆盖。
+4. 操作或版本切换后重新检查入参表单，特别是已经填写的脚本、数组和对象字段。
+
+**界面观察：**HelloWorld 模板预览中，消息卡片助手为 1.2、飞书消息为 2.12，版本按钮禁用；只读预览无法验证升级行为。
+
+## 6. 从上游引用字段
+
+### 6.1 通过胶囊选择器
+
+1. 选中目标节点，打开“入参”。
+2. 将相应字段切换到支持引用的表达式类型。
+3. 输入 `$`，在胶囊选择器中找到来源节点、变量或配置。
+4. 选择输出字段，确认输入框内出现胶囊。
+5. 如果需要更深层字段，编辑胶囊路径，或者在其后追加表达式。
+6. 检查最终值的类型符合入参要求。
+
+### 6.2 通过 snake 连线
+
+从目标入参的引用入口拖出连线到来源节点，选择出参属性。必须确认来源节点会在当前执行路径中产生数据；文档没有保证任意跨分支、跨循环的引用均有效。
+
+### 6.3 深层字段与列表
+
+```text
+〈节点胶囊〉.data.items[0].fields["标题"][0].text
+〈循环节点胶囊〉.item
+〈循环节点胶囊〉.index
+variable.pageToken
+```
+
+尖括号为说明性占位。中文、带点或特殊符号的对象键使用方括号字符串访问，如 `["age.a"]`。列表从 0 开始。实际路径以该节点输出为准。
+
+**官方快捷键：**双击胶囊进入编辑；`Ctrl/Cmd + V` 粘贴；`Backspace` 删除。不要未经检查把包含节点绑定的胶囊降成普通文字。
+
+## 7. 配置循环和分支
+
+串行循环输入为整个数组，循环体内引用当前 `item`。While 的循环条件使用布尔值；当条件依赖可变状态时，使用最新变量写法。循环体内要有更新分页游标及结束条件的节点。
+
+本次 MySQL 模板预览可见：定时任务 → 设置分页参数 → While；While 面板包含“循环条件”和“最大循环次数”，模板值为 100。这个 100 是模板配置，不是平台上限；官方上限是 1,000。
+
+分支需分别配置名称、条件左值、比较操作、右值、And／Or。判断为空、为 null、为 true／false 等条件不要求右值。互斥分支的排序会影响结果；广播没有默认分支，官方执行顺序存在冲突，见勘误。
+
+## 8. 检查错误处理
+
+打开具体动作的“错误处理”，核对规则顺序、错误码匹配、默认策略及重试后行为。不要为了让画布“全绿”而忽略业务失败。
+
+使用“添加分支”时，应确认失败路径上的节点和输入；使用“一键应用”时，先核对同类同操作节点的影响范围。未取得对应修改授权时只查看。
+
+## 9. 调试、日志和发布
+
+**官方步骤；本次未执行。**
+
+1. 先处理校验面板中的必填和限制错误。
+2. 准备最小代表性输入。Mock 触发器数据不等于 Mock 下游接口。
+3. 在有效授权内运行一次调试。
+4. 查看本次运行记录，核对触发器及关键节点的 Input、Output、时间和错误信息。
+5. 检查目标系统实际结果，尤其是创建、发送和更新操作。
+6. 若任务包括发布，确认触发器可发布、配置集和凭证正确后发布，再做入口健康检查；没有发布授权就停在可审阅状态。
+
+手动触发器不能发布。调试失败不能直接反复重试有副作用的节点；先查看是否已产生结果。
+
+## 10. 模板预览的实测观察
+
+| 模板／节点 | 本次确认 | 尚未确认 |
+|---|---|---|
+| HelloWorld 画布 | 手动触发器 → 消息卡片助手 → 飞书消息 | 实际发送、卡片权限配置 |
+| 消息卡片助手入参 | 卡片、卡片发布版本、变量列表；出现非协作者提示 | 创建卡片或更换卡片后的运行 |
+| 飞书消息入参 | 接收者 ID、ID 类型、消息类型、卡片 JSON、幂等 Key | 发送行为和去重时效 |
+| MySQL 模板 | 定时任务、分页变量、While 参数 | 数据库连接、全部循环体行为、写表结果 |
+
+“使用模板”未点击；项目工作流数量仍为 0。公开的只读观察摘要见 [观察记录](UI_OBSERVATIONS.md)，浏览器截图保留在研究者本地。
+
+## 11. 画布操作后的最小核对
+
+核对项目和工作流 → 核对节点操作和版本 → 核对流程路径 → 核对输入类型和引用来源 → 核对日志及业务结果。只对本次改动涉及的入口验证，不为文档研究新增全量测试或 UI 单元测试。
+
+来源：[工作流编辑器](../reference/platform-using-the-workflow-editor.md)、[表达式](../reference/platform-using-expressions.md)、[节点取值](../reference/faq-Reference_value_method.md)、[调试与发布](../reference/platform-debug-and-release-workflow.md)。
+
+## 12. 盘点和整理项目
+
+**实测（2026-11-11），只读盘点一个租户的 29 个项目、229 条工作流时得到。**
+
+- 工作流不能直接移到别的项目。右键菜单只有「移动到文件夹」（本项目内）和「创建副本」（可选别的项目）；项目侧栏的「+」里有「新建文件夹」。
+- 跨项目的副本是一条新工作流：网址触发器的回调地址和原件不同（比对两者地址的指纹得出），要重新发布，运行日志不跟过去。原件的调用方（多维表格按钮或自动化、外部服务器）都得改成新地址。
+- 不是网址触发的流程，跨项目搬也不一定没事。搬之前逐条查这几件事（2026-11-12 盘 235 条时整理）：
+  - 项目配置不跟副本过去。副本定义里还写着 `$.config.<配置名>`，目标项目没有这项就取不到：备份项目里的副本引用了配置，备份项目却一项配置都没有。（实测）要在目标项目重建，是密钥的由用户本人填。
+  - 数据存储：数据集合属于项目（官方文档），步骤参数里写着原项目数据集合的 `dataset_id`（实测），存的数据带不过去（推断）。
+  - 子流程、告警按工作流 ID 互相指着。副本是新 ID，调用方和告警规则都要改指向。（实测）
+  - 副本取的是原件的草稿，不是线上版本。草稿里没发布的改动，副本一发布就上线。（实测，2026-11-12 在练习项目里）
+  - 副本没发布、没启用，运行记录留在原处（实测）。定时任务要先启用副本、马上停原件，免得同一时间跑两遍（推断）。
+  - 审批、企业微信这类事件触发的副本能不能收到事件，没验证。
+  - 凭证不分项目：凭证列表和详情接口都没有项目字段，步骤按凭证 ID 引用。副本和原件逐步比对，除下面「跨项目复制」列的几处外完全一致，凭证 ID 也一样。（实测）副本实际运行能不能用上，没验证。
+- 该租户所有「调用子流程」的目标都在同一项目内。能否跨项目调子流程未验证。
+- 项目切换下拉里的项目数据带 `role`：`owner` 是自己的，`fullEdit` 是别人分享来的，删不了也不能分享。
+- 所以整理分类只在项目内做：改项目名、建文件夹、把纯副本项目导出后删除。
+- 项目内挪进文件夹不影响流程：挪前挪后工作流 ID 相同，网址触发器回调地址的指纹相同，发布和启用状态不变（实测，2026-11-11，挪了 73 条后逐条回读）。
+- 同一项目里文件夹不能重名，重名返回 `code 9 name of folder can not be duplicate`。
+
+盘点方法（全部只读，在已登录的控制台页面里用 `fetch(url, {credentials: 'include'})`）：
+
+1. 项目列表：打开项目切换下拉，从 React fiber 的 `memoizedProps` 里找同时带 `projectType` 和 `role` 的数组。
+   也有接口：`POST /webapi/project/detail/batch`，请求体 `{param:"", filterQuery:{projectType:"normal", tenantId:<本租户 ID>, ignoreQueryDesc:true}, pageQuery:{page, pageSize:40}, sortType:1}`，要带 `x-csrf-token`。请求体照抄页面自己发的那次最稳（点「···」→「查看全部项目」时会发）。`tenantId` 可以不带，别人分享来的项目（`role: fullEdit`）也在里面。返回 `data.projects[]`（`id`、`name`、`role`、`flow.total`、`flow.runningCount`）和 `data.total`。（实测，2026-11-12 列出 28 个项目）
+2. 每个项目 `GET /webapi/projects/<项目ID>/files`，递归 `childResourceNodes`：`type===2` 是工作流，其余有名字的节点是文件夹。
+3. 每条 `GET /webapi/v2/flows/<工作流ID>`：看 `isPublished`、`isEnabled`；`draft.definition` 再 parse 一次得 `steps[]`，`steps[].operation` 是对象 `{connectorId, operationId}`。网址触发器的 `hook.hookKey` 为空，回调地址不在定义里。
+4. 每条查 32 天运行次数：`POST /webapi/flow_log/search_flow_log`，`flowList: [["<工作流ID>"]]`、`pageSize: 1`，取 `count`；失败数再加 `status: [["failed"]]`。没有记录时返回 `code 15100002`，按 0 次算。`status` 写成一维数组、字符串或数字都返回 `15000000`。
+   查不到 32 天以前的最后运行时间：日志最早只到约 32 天前，「监控」页（`/webapi/dashboard/runStates`）查 40～400 天前整个租户也全是 0，两处都没有更早的数据。名单里这类流程的最后运行写「无」，另附草稿的最后修改日期（`updatedAt`）估计闲置多久。（实测，2026-11）
+   看一次运行里每个节点的入参和出参：`POST /webapi/flow_log/search_node_log`，请求体 `{flowInstanceID, pageSize: 100, page}`，返回 `nodeLogList[]`（`nodeID`、`input`、`output`、`cost`）。`flowInstanceID` 从 `flowLogList` 里拿。能用它数出每次运行实际写了多少行。（实测，2026-11-12）
+   把一条流程 32 天的运行按日期和耗时排一排，能看出隐藏的定时调用：某条网址触发的流程每周六 03:00 起连跑 356 次、每次约 1 分钟，就是外部每周调它一次，它再自己一页页往下调。翻页翻过总数会返回重复记录，按 `flowInstanceID` 去重。（实测，2026-11-12）
+   `pageSize` 最大 100，填 200 返回 `10000006 参数无效`。`asc: true` 也照样新的在前，按 `startAt` 自己排。（实测，2026-11-12）
+   查定时有没有漏跑：把一条定时流程 32 天的开始时间排好，算相邻两次的间隔，超过中位数 1.5 倍的就是漏跑或停跑；再按天数一下这条流程和整个租户的次数，租户那天有日志而它是 0，就是真没跑，不是日志丢了。（实测，2026-11-12）
+5. 浏览器扩展的 JS 返回值约 1000 字就截断，含 `=`、`&`、`?` 的长串会被整段拦掉；base64 串也会被拦。少量数据先在页面里拼成文本、按 900 字切块存在 `window` 上，再一次批量读十几块。
+   几十 KB 的数据搬到本机：在页面里插一个按钮，用真实点击（截图工具的 left_click）点它，按钮里调 `navigator.clipboard.writeText(数据)`，本机再 `pbpaste` 取出。不经点击直接调 `writeText` 会卡到超时。（实测，2026-11-12，47 KB）
+   别让页面 `fetch` 本机端口收数据：Chrome 拦公网页面访问 `127.0.0.1`，报 `Failed to fetch`；本机端口还可能被用户自己的服务占着，用前先 `lsof -iTCP:<端口>` 查。（实测，2026-11-12）
+6. 读定义查依赖（实测，2026-11-12，235 条）：
+   - 步骤类型看步骤 ID 去掉末尾数字。触发器有 `webhook-trigger`（网址）、`cronjob_trigger`（定时）、`manual-trigger`（手动）、`subflow-trigger`（被当子流程调）、`alert_trigger`（告警）、`approval`（审批事件）、`work_wechat`（企业微信事件）。普通步骤里 `storage` 是数据存储，`subflow-caller` 是调用子流程。
+   - `subflow-caller` 的 `parameters.sub_flow_id.value` 是被调流程的 ID。`alert_trigger` 的 `parameters.alertRules` 里有它盯着的流程 ID。
+   - 用到项目配置的地方写成 `$.config.<配置名>`，用正则 `\$\.config\.([A-Za-z0-9_\u4e00-\u9fa5]+)` 找。项目里有哪些配置：`POST /webapi/project/variable`，体 `{projectID}`，带 `x-csrf-token`，读 `data.variableNames`。`data.variableGroups[].variables` 是 JSON 字符串，里面有值，可能是密钥，别输出。
+   - 已发布版本接口返回的 `referencedVariables` 是对象，多数是 `{}`，不是数组。
+   - 比草稿和线上：两边 `steps` 按 `id` 排序，`operation` 只留 `connectorId`、`operationId`，转成键名排序的 JSON 再比。235 条里有 14 条不一样。
+
+整理方法（写操作，2026-11-11 实测；先拿用户同意）：
+
+- 写接口要带请求头 `x-csrf-token`，值是 cookie `anycross_csrf_token`。监控页接口不带它时报 CSRF 无效（实测）；带上后建文件夹、挪动、改名都通过。
+- 建文件夹：`POST /webapi/projects/<项目ID>/folders`，`{parentFileID: <文件树根节点 id>, name}`。文件树根节点 `type 4`，文件夹 `type 3`，工作流 `type 2`。界面「+」→「新建文件夹」先建成「未命名文件夹1」，再改名。
+- 文件夹改名：`PATCH /webapi/projects/<项目ID>/folders/<文件夹 id>`，`{name}`。
+- 挪进文件夹：`POST /webapi/projects/<项目ID>/files/batch_move`，`{fileIDs: [...], referenceFileID: <文件夹 id>, position: 2}`。`fileIDs` 是文件树节点的 `id`，不是工作流 ID（`resourceID`）。一次可挪一批。
+- 批量改项目名（2026-11-12 实测改 18 个）：刚打开控制台时页面会自己跳到某条工作流，这时发出的读项目请求可能拿到空 `data`，脚本跑到一半就断了。每次读写都带重试；按「现名等于新名就跳过、等于旧名才改、都不是就停下报告」写，断了可以直接整段重跑，不会改两遍。改完用 `POST /webapi/project/detail/batch` 整体回读一次，核对名称和每个项目的 `flow.total`、`flow.runningCount`。
+- 改项目名：`PATCH /webapi/projects/<项目ID>`，`{name, desc, icon}`，三项一起提交。先用 `POST /webapi/project/<项目ID>`（请求体 `{}`）读 `data.project` 里原来的 `desc` 和 `icon` 原样带上（界面就是这样提交的；不带会不会被清空没试过）。界面入口：左上角项目名旁「···」→「编辑基本信息」。
+- 整理前按「盘点方法」重查一遍状态再挪，别直接用旧名单：本次整理当天就有一条流程刚被停掉。做完回读文件树，核对每个文件夹里的条数和名单一致、没有多挪漏挪，再逐条比发布和启用状态。
+- 导出：`GET /webapi/projects/-/flows/<工作流ID>/export?name=<名称>`，直接返回 zip。2026 年以前的老流程，导出的 `flow.json` 里没有 `flowID`，核对时改比名称和步骤。
+- 用脚本连续触发下载，Chrome 从第二个起就拦。拦过以后，同一个标签页里手动点也下不了，这是浏览器的多文件下载限制，不要去改浏览器权限。做法：在页面里把几十份 zip 转成 base64 合进一个 JSON；新开一个同源标签页，用 `BroadcastChannel` 把数据传过去，在新页面只下载这一个文件；本机再拆回一个个 zip。
+- 跨项目复制：`POST /webapi/projects/<原项目ID>/flows/<工作流ID>/duplicate`，`{name, targetProject}`，返回 `data.flowID`。副本放在目标项目的最外层，是草稿，没启用。和原件比，副本有这几处不同：
+  - 每步 `operation` 只留 `connectorId`、`operationId`，组件名称、版本号、动作名称都没带过来；
+  - 网址触发器换了新回调地址，定时触发器换了新 `hookKey`；
+  - 定义里的 `name` 变成当前流程名；原件定义里可能还留着改名前的旧名。
+  比对时把这几处排除，再按键名排序后逐步比。
+- 删除：`DELETE /webapi/projects/<项目ID>/flows/<工作流ID>`，请求体 `{}`。界面上要输入工作流名称才能删，确认框写着「删除后，该工作流将立即停止，且无法恢复」。没有回收站，删之前先导出、复制，核对通过后再删。
+- 删项目：界面在左上「当前项目」右边的「···」→「删除」，确认框要输入项目名（有「一键填入」）。页面发的是 `DELETE /webapi/projects/<项目ID>`，请求体 `{}`。确认框会晚一两秒才出来，截图可能拍不到，用元素定位找「一键填入」「删除」按钮。删完页面自动跳到别的项目，别在跳过去的项目里接着点。删后 `POST /webapi/project/<项目ID>` 返回 `40001` 没有查看权限，项目列表里也没有了。删项目前先看工作流、项目配置、数据存储是不是都空，项目配置和数据存储跟项目一起没。（实测，2026-11-11 删了 3 个空项目）
+- 「···」菜单里「生成模板」紧挨在「导出」下面，点错会弹出创建并分享模板的窗口，点「取消」就什么都不生成。
+- 一次批量删几十条，可能被 Claude Code 的安全检查以「删除范围无法核实」拦下。先把逐条清单（原项目、名称、原件 ID、副本 ID）写进记录文件给用户看，用户明确确认后再删。
+- 批量删的固定做法（2026-11-11 实测删 57 条）：删前逐条核四件事——原件在原项目文件树里、名字和清单一致、40 天内 0 次运行、副本在备份项目的文件夹里，全过才动手；删每条之前再查一次运行次数，仍为 0 才删，间隔 0.3 秒；接口返回 `code 0 success`。删完回读文件树，确认原件不在了、副本条数一个不少。流程删光后项目本身还在，要不要删项目另问用户。
+
+## 13. 不点画布：用页面接口写整条草稿
+
+**实测（2026-11-12）：在一条新建的流程上，把 14 个节点（定时触发、连接器、数据存储、动态脚本、两层互斥分支）一次写进草稿。保存成功，校验只剩「没选凭证」，画布显示正常。**
+
+步骤多、脚本或提示词长的时候，一个个点画布慢，还容易漏。可以在本机生成整条定义，在已登录的编辑页里调页面自己的接口写进草稿。
+
+- 读草稿：`GET /webapi/v2/flows/<流程ID>`。`data.draft.definition` 是一段 JSON 文字，里面的 `structure` 管流程的形状，`steps` 管每个节点的配置。
+- 写草稿：`PUT /webapi/projects/-/flows/<流程ID>/draft`，请求体是 `{"steps": "<JSON 文字>", "structure": "<JSON 文字>"}`。
+  - `steps` 是以节点 ID 为键的对象，不是数组。读回来的 `steps` 却是数组，写回去前要按 `id` 转成对象；直接把数组写回去，返回 `10000006 参数无效`。（实测，2026-11-12）
+  - 两个值都要先转成文字。
+  - 写入会整个覆盖草稿，所以先把读到的旧定义存一份。
+- 写完校验：`POST /webapi/flows/<流程ID>/v2/validate`，请求体 `{"isPublish": false, "validateMode": 1}`。`data.results` 按节点列出问题，比如没选凭证是 `errorRequireCredentials`。
+- 把本机文件交给页面：在页面里插一个 `<input type=file>`，用浏览器工具的上传功能把文件放进去，再用 `files[0].text()` 读出来。十几 KB 的 JSON 这样传，比直接贴进代码稳。
+- 触发器沿用草稿里原有的那个：读出来，改个名字，再放回去，这样界面上设的字段不会丢。
+- 凭证：节点上选好凭证后，草稿里写的是 `auth.credentials: {type: "cred", value: "<13 位短引用>"}`，`auth.key` 仍然是空的。短引用不是口令本身，可以写进本机的生成脚本，这样重新写草稿时凭证不会被清掉。换了凭证要重新读一次。（实测，2026-11-12）
+- 不点画布选凭证：短引用就是凭证列表 `GET /webapi/connection_profiles` 里 `data.connProfiles[].id`。按名字找到这张凭证，把它写进对应节点的 `auth.credentials`，再整条写回草稿、校验。`errorRequireCredentials` 就消失了。2026-11-12 用这个办法给 16 条流程的 24 个节点选上了凭证；写前存旧草稿，写后逐个节点比过，别的都没变。（实测）
+  - 找节点时，别拿连接器开发页地址里的 ID 去比 `operation.connectorId`。同一个自建连接器，这两个数不一样。按节点 ID 找，或者先从已有节点读出 `connectorId` 再比。（实测）
+- 这样写进去的流程，发布后照常跑：一条 14 个节点、每 5 分钟一次的流程，前 10 次全部成功。（实测，2026-11-12）
+- 节点格式不要猜。先在画布上加一个节点、填一个示例值，再读草稿照抄。下面是这次读到的格式：
+
+| 节点 | 写法 |
+|---|---|
+| 每个节点 | `{id, type: "normal", operation: {connectorId, operationId}, name, description, auth: {key: "", parameters: null, credentials: null}, parameters, errorHandler: {defaultStrategy: {id: "<节点ID>.error_handler.default", name: "", action: "retry", retryFallbackAction: "terminate"}}}`。`action` 也可以填 `terminate`。 |
+| 写死的值 | 字符串 `{"type": "string", "value": "…"}`，数字用 `number`。数组写 `{"type": "array", "value": [ … ]}`，每一项也是这种带 type 的写法。对象写 `{"type": "object", "value": {字段: …}}`。 |
+| 引用上游 | `{"type": "spel", "value": {"expression": "_(\"$.<节点ID>.<路径>\")", "node_tree": {"t": "json_path", "path": "$.<节点ID>.<路径>"}}}`。整个数组或对象也能一次引用过来，界面上显示成一个胶囊。 |
+| 动态脚本 | `{input: {type: object, value: {入参名: 值或引用}}, js_code: {type: string, value: "function handler(input) {…}"}}`。输出包在 `result` 里，下游用 `$.<节点ID>.result.xxx` 取。 |
+| 数据存储·获取值 | `{dataset_id, key, default_value, raise_error: "no"}`。`dataset_id` 是项目默认数据集合的 ID，从画布上加的节点里读出来。 |
+| 数据存储·设置值 | `{data: {type: object, value: {dataset_id, kv_pairs: {type: array, value: [{type: object, value: {key, value, value_type: "string"}}]}}}}` |
+| 互斥分支 | 父节点：`type: "branch_exclusive_parent"`，`operation: {connectorId: "branch", operationId: "branch_exclusive"}`，`parameters: {maxSize: 1, branches: {<路径ID>: {label, operator: "and", conditions: [{operator: "greaterThan", comparison: {left, right}}]}}}`。每条路径也是一个节点，`type: "branch_exclusive_child"`，`operation: {}`，`parameters: null`。默认路径的 ID 是 `<父ID>.default`，不写进 `branches`。 |
+| 流程变量 | 用「设置变量」节点定义，`parameters.variables` 是数组，每项 `{type: object, value: {key, value, value_type}}`。引用写 `{"type": "spel", "value": {"expression": "_(\"$.variable.<名>\")", "node_tree": {"t": "flow_variable", "path": "<名>"}}}`。（实测，2026-11-12） |
+| While、并行循环 | While 父节点 `type: "while_parent"`，`operation: {connectorId: "while", operationId: "while"}`，`parameters: {maxSize, condition}`，路径节点是 `<父ID>.default`、`type: "while_child"`。并行循环父节点 `type: "loop_parallel_parent"`，`operation: {connectorId: "loop", operationId: "loop_parallel"}`，`parameters: {maxSize（最多 10）, items}`，路径节点 `type: "loop_parallel_child"`；循环里用 `$.<循环ID>.item.<字段>` 取当前这一项。（实测，2026-11-12） |
+| structure | `[{id, type, subSteps}]`。分支父节点的 `subSteps` 是各条路径，路径的 `subSteps` 是路径里的节点，里面还能再套分支。 |
+
+**新建流程、改名、补回调地址（实测，2026-11-12：在一个项目里用接口建了 17 条，全部校验通过）**
+
+- 新建：`POST /webapi/projects/<项目ID>/flows`，请求体 `{name, desc, connectorID: <触发器的连接器 ID>, createTo: <文件夹在文件树里的 id>}`，返回 `data.flowID`。带了 `createTo` 就直接建在那个文件夹里。建出来的草稿只有一个默认触发器：定时触发器默认是「每天」，网址触发器默认是「异步网址触发器」。
+- 改名、改描述：`PATCH /webapi/projects/<项目ID>/flows/<流程ID>`，请求体 `{name, desc}`。流程描述写 135 字也能存。
+- 用接口建的网址触发器没有回调地址，校验会报 `errorEmptyWebhookURL`。办法是先调 `GET /webapi/trigger/webhook?flowId=<流程ID>` 取 `data.webhook`（界面切换触发器类型时调的就是它），再写进触发器的 `parameters`：`{webhook, body_type: "json", authorization_config: {authorization_method: 0}}`。回调地址就是钥匙，只在页面里传，不要打印。
+- 间隔触发：`operationId` 换成「间隔触发」那个，`parameters.cronjob` 写 `{trigger_type: "INTERVAL_TRIGGER", interval_trigger_type: "min", interval_trigger_frequency: 15, timezone: "Asia/Shanghai", trigger_day: []}`。不写时区，就是界面默认的 `America/Los_Angeles`。界面上「触发器生效期」默认是「发布后两年内」。
+- 告警流程：新建时 `connectorID` 填告警触发器的连接器 ID。`parameters.alertRules` 照抄一条已有的规则，只改三处：
+  - `ruleName`
+  - `resourceList`，每项写成 `{resourceId, resourceName}`
+  - `_id`，换成随机的 21 位字母数字，别和老规则重复
+
+  发消息的节点从老告警流程的草稿里整个读出来，原样放进去（凭证和群都在里面），这样校验就能全部通过。
+- 分支条件数组里，每一项是普通对象 `{operator, comparison}`，外面不要再包一层 `{type: "object", value: …}`。包了以后校验报「请输入…节点的分支条件」。
+- 节点描述太长会报 `errorStepDescLengthExceed`：63 字能过，109 字过不了。
+- 嵌套：While 里套并行循环、并行循环里再套 While，三层能保存，也能通过校验。只验到校验这一步，没有实际跑过。
+- 并行循环的每一圈共用同一组流程变量。有的流程拿一个流程变量（例如 `should_continue`）控制每条记录「写失败就重试」的 While，各圈会互相改这个变量，结果有的记录被写好几次，有的一次也没写，节点却全显示成功。（现象实测，原因推断，2026-11-12）
+  - 实测：订单增量每轮取到约 40 条，只写进 31～36 条，每轮漏 3～7 条。全量的一页 200 条里，151 条写了 1 次、34 条写了 2～5 次、15 条一次没写；那天整次全量 7.1 万条漏了约 6900 条。
+  - 并行循环里要重试，别靠流程变量。改用节点自己的「出错重试」，或者改成串行循环。改完数一数「取到几条、写进几条」，用节点日志对。
+- 数据存储的「键」可以填表达式（引用上游的输出），校验能通过。
+- 子流程（实测，2026-11-12，校验通过并在界面上核对过）：
+  - 异步调用子流程：连接器 `7205886702128300033`，操作 `7205886702472757276`，界面显示「异步调用子流程」。参数 `{flow_id: <本流程ID>, sub_flow_id: {type: "subFlow", value: <子流程ID>}, flow_input: {type: "object", value: {}}}`，不用填超时。同步调用是操作 `7205886702433632258`，要多填 `limit_time`（秒）。
+  - 子流程触发器：连接器 `7205887880971599873`，操作 `7205887881171681281`，参数 `{sub_flow_id: {type: "refFlow", value: <本流程ID>}, flow_id: <本流程ID>}`。用接口建的定时流程，把触发器这一步直接换成它，校验能过。
+  - 被调用的流程自己有校验错误（比如没选凭证）时，调用方报 `errorSubFlowError`「调用的工作流存在错误」。先把被调用的流程改好。
+- 错误处理写 `errorHandler: {strategies: [], defaultStrategy: {id: "<步骤ID>.error_handler.default", name: "", action: "ignore"}}`，界面显示「忽略」。`action` 还可以是 `retry`（配 `retryFallbackAction`）和 `terminate`。（实测）
+- 间隔触发的 `interval_trigger_frequency` 填 60（分钟）也能通过校验。（实测）
+- 「重试，还失败走分支」（实测，2026-11-12，连接器步骤这样写校验能过；写法照抄老流程 HTTP 步骤）：
+  - `defaultStrategy` 写 `{action: "retry", retryFallbackAction: "branch"}`。
+  - structure 里，在这一步的 `subSteps` 放 `{id: "<步骤ID>.error_handler.default", type: "error_handler_branch", subSteps: [分支里的节点]}`。
+  - steps 里也要有一个同 ID 的空节点：`{id, type: "error_handler_branch", operation: {}, name: "", description: "", auth: {key: "", parameters: null, credentials: null}, parameters: null}`。
+- 分支条件「不为空」写 `{operator: "isNotEmpty", comparison: {type: "object", value: {left: <引用>}}}`，不用写 `right`。左边引用流程变量时，`node_tree` 要写 `flow_variable`；写成 `json_path` 的 `$.variable.<名>` 会报 `errorJsonpathUnknown`。（实测，2026-11-12）
+- 延迟节点的 `time_unit` 填的是秒数，可以带小数，老流程用 2.6。等 N 分钟的子流程，老流程是这样写的，照抄能通过校验：While 条件写死 `true`，每圈放一个 2.6 秒的延迟；分支拿 `$.while-1.index` 和圈数比，够数了走「终止」结束子流程。（实测，2026-11-12）
+- 新建「子流程触发」的流程，`connectorID` 填 `7205887880971599873`。子流程触发和网址触发可以在草稿里互相换：换成网址触发时，先用 `GET /webapi/trigger/webhook?flowId=` 取回调地址再填进去。两种都校验通过。（实测，2026-11-12）
+- 用接口写草稿时，不要同时开着这条流程的编辑页。编辑页自己存着一份草稿，比如切换触发器时，它会把整份草稿 PUT 回去，盖掉你刚写进去的。

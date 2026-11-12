@@ -1,0 +1,10 @@
+# 根目录是私有工作区，只公开下面放行的几项
+/*
+!/.gitignore
+!/LICENSE
+!/.github/
+!/.claude-plugin/
+!/skills/
+# 自己工作流的档案只留本机
+/skills/feishu-anycross/references/workflows/*
+!/skills/feishu-anycross/references/workflows/README.md

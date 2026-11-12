@@ -1,0 +1,1161 @@
+{
+  "snapshotDate": "2026-09-21",
+  "format": "source-links-only",
+  "sources": [
+    {
+      "key": "helpers-7177664485316935682",
+      "name": "Object 助手",
+      "url": "https://anycross.feishu.cn/documentation/connector/helper/7177664485316935682",
+      "checkedAt": "2026-09-21T08:12:23.756Z",
+      "documentedLatestVersion": "1.1"
+    },
+    {
+      "key": "business-7212555788261277700",
+      "name": "汇联易",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7212555788261277700",
+      "checkedAt": "2026-09-21T08:17:38.069Z",
+      "documentedLatestVersion": "1.0"
+    },
+    {
+      "key": "helpers-6966219829472657411",
+      "name": "数据转换",
+      "url": "https://anycross.feishu.cn/documentation/connector/helper/6966219829472657411",
+      "checkedAt": "2026-09-21T08:12:43.202Z",
+      "documentedLatestVersion": "1.1"
+    },
+    {
+      "key": "platform-connector-version-control",
+      "name": "连接器版本管理",
+      "url": "https://anycross.feishu.cn/documentation/platform/connector-version-control",
+      "checkedAt": "2026-09-21T07:43:10.320Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "platform-overview",
+      "name": "平台介绍",
+      "url": "https://anycross.feishu.cn/documentation/platform/overview",
+      "checkedAt": "2026-09-21T07:42:21.849Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "faq-connector_upgrade_instructions",
+      "name": "凭证升级说明",
+      "url": "https://anycross.feishu.cn/documentation/faq/connector_upgrade_instructions",
+      "checkedAt": "2026-09-21T07:59:24.094Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "ai-7387707175126384644",
+      "name": "通义万相",
+      "url": "https://anycross.feishu.cn/documentation/connector/ai/7387707175126384644",
+      "checkedAt": "2026-09-21T08:13:25.832Z",
+      "documentedLatestVersion": "1.2"
+    },
+    {
+      "key": "helpers-6985120860495429660",
+      "name": "文件助手",
+      "url": "https://anycross.feishu.cn/documentation/connector/helper/6985120860495429660",
+      "checkedAt": "2026-09-21T08:12:25.720Z",
+      "documentedLatestVersion": "1.5"
+    },
+    {
+      "key": "business-7405141274673889282",
+      "name": "巨量本地推",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7405141274673889282",
+      "checkedAt": "2026-09-21T08:17:53.421Z",
+      "documentedLatestVersion": "1.1"
+    },
+    {
+      "key": "platform-manage-user-permissions",
+      "name": "管理平台用户和权限",
+      "url": "https://anycross.feishu.cn/documentation/platform/manage-user-permissions",
+      "checkedAt": "2026-09-21T07:57:19.812Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "business-7241457682522112004",
+      "name": "聚水潭",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7241457682522112004",
+      "checkedAt": "2026-09-21T08:17:56.410Z",
+      "documentedLatestVersion": "1.7"
+    },
+    {
+      "key": "business-7175059818565419011",
+      "name": "伙伴云",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7175059818565419011",
+      "checkedAt": "2026-09-21T08:17:38.752Z",
+      "documentedLatestVersion": "1.6"
+    },
+    {
+      "key": "faq-billing_instructions",
+      "name": "AI 功能额度消耗说明",
+      "url": "https://anycross.feishu.cn/documentation/faq/billing_instructions#%E4%B8%80%E3%80%81AI%20%E5%8A%9F%E8%83%BD%E8%AF%B4%E6%98%8E",
+      "checkedAt": "2026-09-21T07:59:24.609Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "business-7174995310329167873",
+      "name": "快递100",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7174995310329167873",
+      "checkedAt": "2026-09-21T08:17:58.742Z",
+      "documentedLatestVersion": "1.3"
+    },
+    {
+      "key": "business-7506361381482315777",
+      "name": "RocketMQ",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7506361381482315777",
+      "checkedAt": "2026-09-21T08:16:45.943Z",
+      "documentedLatestVersion": "1.0"
+    },
+    {
+      "key": "business-7365717587433259012",
+      "name": "Microsoft Excel",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7365717587433259012",
+      "checkedAt": "2026-09-21T08:16:18.969Z",
+      "documentedLatestVersion": "1.2"
+    },
+    {
+      "key": "feishu-7104162315897143298",
+      "name": "飞书 AI",
+      "url": "https://anycross.feishu.cn/documentation/connector/lark/7104162315897143298",
+      "checkedAt": "2026-09-21T08:15:53.319Z",
+      "documentedLatestVersion": "1.9"
+    },
+    {
+      "key": "business-6985356262837878788",
+      "name": "薪人薪事",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/6985356262837878788",
+      "checkedAt": "2026-09-21T08:18:29.937Z",
+      "documentedLatestVersion": "1.11"
+    },
+    {
+      "key": "helpers-7329872248653758468",
+      "name": "CSV助手",
+      "url": "https://anycross.feishu.cn/documentation/connector/helper/7329872248653758468",
+      "checkedAt": "2026-09-21T08:12:28.453Z",
+      "documentedLatestVersion": "1.0"
+    },
+    {
+      "key": "platform-manage-integration-resources",
+      "name": "管理企业集成资源",
+      "url": "https://anycross.feishu.cn/documentation/platform/manage-integration-resources",
+      "checkedAt": "2026-09-21T07:57:33.483Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "business-7263013589974482948",
+      "name": "禅道",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7263013589974482948",
+      "checkedAt": "2026-09-21T08:17:02.385Z",
+      "documentedLatestVersion": "1.2"
+    },
+    {
+      "key": "feishu-7044123525371658242",
+      "name": "飞书人事（企业版）",
+      "url": "https://anycross.feishu.cn/documentation/connector/lark/7044123525371658242",
+      "checkedAt": "2026-09-21T08:15:51.929Z",
+      "documentedLatestVersion": "1.16"
+    },
+    {
+      "key": "feishu-7140833841618796546",
+      "name": "飞书视频会议",
+      "url": "https://anycross.feishu.cn/documentation/connector/lark/7140833841618796546",
+      "checkedAt": "2026-09-21T08:15:29.209Z",
+      "documentedLatestVersion": "1.7"
+    },
+    {
+      "key": "platform-on-prem-intro",
+      "name": "本地代理服务介绍",
+      "url": "https://anycross.feishu.cn/documentation/platform/on-prem-intro",
+      "checkedAt": "2026-09-21T07:57:13.416Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "business-7174977912960155676",
+      "name": "巨量星图",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7174977912960155676",
+      "checkedAt": "2026-09-21T08:17:55.123Z",
+      "documentedLatestVersion": "1.5"
+    },
+    {
+      "key": "faq-Reference_value_method",
+      "name": "工作流节点取值",
+      "url": "https://anycross.feishu.cn/documentation/faq/Reference_value_method",
+      "checkedAt": "2026-09-21T07:59:12.954Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "logic-7012976537360171036",
+      "name": "终止",
+      "url": "https://anycross.feishu.cn/documentation/connector/core/7012976537360171036",
+      "checkedAt": "2026-09-21T08:11:55.743Z",
+      "documentedLatestVersion": "1.1"
+    },
+    {
+      "key": "business-7494120807644299292",
+      "name": "kafka",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7494120807644299292",
+      "checkedAt": "2026-09-21T08:17:57.732Z",
+      "documentedLatestVersion": "1.0"
+    },
+    {
+      "key": "business-7343917765155536900",
+      "name": "Microsoft Teams",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7343917765155536900",
+      "checkedAt": "2026-09-21T08:16:33.438Z",
+      "documentedLatestVersion": "1.3"
+    },
+    {
+      "key": "ai-7368373083013971971",
+      "name": "MiniMax",
+      "url": "https://anycross.feishu.cn/documentation/connector/ai/7368373083013971971",
+      "checkedAt": "2026-09-21T08:13:07.346Z",
+      "documentedLatestVersion": "1.2"
+    },
+    {
+      "key": "business-7143817151856623620",
+      "name": "Salesforce",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7143817151856623620",
+      "checkedAt": "2026-09-21T08:16:56.721Z",
+      "documentedLatestVersion": "1.14"
+    },
+    {
+      "key": "feishu-7339802645187264515",
+      "name": "飞书 Aily",
+      "url": "https://anycross.feishu.cn/documentation/connector/lark/7339802645187264515",
+      "checkedAt": "2026-09-21T08:15:42.163Z",
+      "documentedLatestVersion": "1.8"
+    },
+    {
+      "key": "ai-7468955142491963394",
+      "name": "DeepSeek（火山方舟版）",
+      "url": "https://anycross.feishu.cn/documentation/connector/ai/7468955142491963394",
+      "checkedAt": "2026-09-21T08:13:06.755Z",
+      "documentedLatestVersion": "1.1"
+    },
+    {
+      "key": "catalog-helpers",
+      "name": "助手组件",
+      "url": "https://anycross.feishu.cn/documentation/connector/helper",
+      "checkedAt": "2026-09-21T07:25:36.788Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "triggers-7066028102404554780",
+      "name": "告警触发器",
+      "url": "https://anycross.feishu.cn/documentation/connector/trigger/7066028102404554780",
+      "checkedAt": "2026-09-21T08:12:56.373Z",
+      "documentedLatestVersion": "1.4"
+    },
+    {
+      "key": "logic-7207004558092976129",
+      "name": "循环",
+      "url": "https://anycross.feishu.cn/documentation/connector/core/7207004558092976129",
+      "checkedAt": "2026-09-21T08:11:54.057Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "business-7189498496475086852",
+      "name": "金蝶云星空",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7189498496475086852",
+      "checkedAt": "2026-09-21T08:17:52.165Z",
+      "documentedLatestVersion": "1.17"
+    },
+    {
+      "key": "feishu-7021056008860499970",
+      "name": "飞书多维表格",
+      "url": "https://anycross.feishu.cn/documentation/connector/lark/7021056008860499970",
+      "checkedAt": "2026-09-21T08:15:38.441Z",
+      "documentedLatestVersion": "2.19"
+    },
+    {
+      "key": "business-7174975290601373724",
+      "name": "抖音生活服务",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7174975290601373724",
+      "checkedAt": "2026-09-21T08:17:19.238Z",
+      "documentedLatestVersion": "1.4"
+    },
+    {
+      "key": "helpers-7023188879897313308",
+      "name": "加解密助手",
+      "url": "https://anycross.feishu.cn/documentation/connector/helper/7023188879897313308",
+      "checkedAt": "2026-09-21T08:07:20.168Z",
+      "documentedLatestVersion": "1.5"
+    },
+    {
+      "key": "faq-limits",
+      "name": "使用限制",
+      "url": "https://anycross.feishu.cn/documentation/faq/usage_restrictions",
+      "checkedAt": "2026-09-21T07:58:23.315Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "platform-connector-devkit-overview",
+      "name": "连接器开发工具介绍",
+      "url": "https://anycross.feishu.cn/documentation/platform/connector-devkit-overview",
+      "checkedAt": "2026-09-21T07:57:10.140Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "business-7304189419610898436",
+      "name": "Figma",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7304189419610898436",
+      "checkedAt": "2026-09-21T08:16:11.895Z",
+      "documentedLatestVersion": "1.4"
+    },
+    {
+      "key": "catalog-business",
+      "name": "业务连接器",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz",
+      "checkedAt": "2026-09-21T07:25:37.574Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "business-7119387275368103938",
+      "name": "北森组织员工",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7119387275368103938",
+      "checkedAt": "2026-09-21T08:17:00.423Z",
+      "documentedLatestVersion": "1.8"
+    },
+    {
+      "key": "business-7145059205416861699",
+      "name": "Moka",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7145059205416861699",
+      "checkedAt": "2026-09-21T08:16:34.401Z",
+      "documentedLatestVersion": "1.9"
+    },
+    {
+      "key": "feishu-6980900692974125057",
+      "name": "飞书审批",
+      "url": "https://anycross.feishu.cn/documentation/connector/lark/6980900692974125057",
+      "checkedAt": "2026-09-21T08:15:26.390Z",
+      "documentedLatestVersion": "2.14"
+    },
+    {
+      "key": "platform-dynamic-dropdown",
+      "name": "动态下拉配置说明",
+      "url": "https://anycross.feishu.cn/documentation/platform/dynamic-dropdown",
+      "checkedAt": "2026-09-21T07:41:57.062Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "feishu-7140897584851206147",
+      "name": "飞书项目",
+      "url": "https://anycross.feishu.cn/documentation/connector/lark/7140897584851206147",
+      "checkedAt": "2026-09-21T08:15:57.391Z",
+      "documentedLatestVersion": "2.4"
+    },
+    {
+      "key": "business-7236713304717246492",
+      "name": "用友 U8",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7236713304717246492",
+      "checkedAt": "2026-09-21T08:18:33.036Z",
+      "documentedLatestVersion": "1.1"
+    },
+    {
+      "key": "helpers-7205086263668703235",
+      "name": "随机数助手",
+      "url": "https://anycross.feishu.cn/documentation/connector/helper/7205086263668703235",
+      "checkedAt": "2026-09-21T08:12:36.613Z",
+      "documentedLatestVersion": "1.0"
+    },
+    {
+      "key": "platform-develop-connector-actions",
+      "name": "开发连接器操作",
+      "url": "https://anycross.feishu.cn/documentation/platform/develop-connector-actions",
+      "checkedAt": "2026-09-21T07:43:15.438Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "ai-7367254784327073796",
+      "name": "扣子（Coze）",
+      "url": "https://anycross.feishu.cn/documentation/connector/ai/7367254784327073796",
+      "checkedAt": "2026-09-21T08:13:09.199Z",
+      "documentedLatestVersion": "1.2"
+    },
+    {
+      "key": "catalog-triggers",
+      "name": "触发器",
+      "url": "https://anycross.feishu.cn/documentation/connector/trigger",
+      "checkedAt": "2026-09-21T07:25:36.965Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "helpers-7211134173963403292",
+      "name": "数据存储",
+      "url": "https://anycross.feishu.cn/documentation/connector/helper/7211134173963403292",
+      "checkedAt": "2026-09-21T08:12:41.330Z",
+      "documentedLatestVersion": "1.1"
+    },
+    {
+      "key": "catalog-feishu",
+      "name": "飞书连接器",
+      "url": "https://anycross.feishu.cn/documentation/connector/lark",
+      "checkedAt": "2026-09-21T07:25:37.358Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "business-7274932733506453507",
+      "name": "Zabbix",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7274932733506453507",
+      "checkedAt": "2026-09-21T08:16:59.301Z",
+      "documentedLatestVersion": "1.3"
+    },
+    {
+      "key": "business-7250386746410598404",
+      "name": "西门子 Teamcenter",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7250386746410598404",
+      "checkedAt": "2026-09-21T08:18:21.607Z",
+      "documentedLatestVersion": "1.2"
+    },
+    {
+      "key": "business-7158704055215325187",
+      "name": "MySQL",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7158704055215325187",
+      "checkedAt": "2026-09-21T08:16:36.988Z",
+      "documentedLatestVersion": "1.6"
+    },
+    {
+      "key": "triggers-7303842867158892548",
+      "name": "Jenkins",
+      "url": "https://anycross.feishu.cn/documentation/connector/trigger/7303842867158892548",
+      "checkedAt": "2026-09-21T08:12:57.836Z",
+      "documentedLatestVersion": "1.1"
+    },
+    {
+      "key": "feishu-6998449338766622721",
+      "name": "飞书 OKR",
+      "url": "https://anycross.feishu.cn/documentation/connector/lark/6998449338766622721",
+      "checkedAt": "2026-09-21T08:15:54.138Z",
+      "documentedLatestVersion": "1.11"
+    },
+    {
+      "key": "business-7246738374529236995",
+      "name": "PostgreSQL",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7246738374529236995",
+      "checkedAt": "2026-09-21T08:16:43.900Z",
+      "documentedLatestVersion": "1.4"
+    },
+    {
+      "key": "catalog-ai",
+      "name": "AI",
+      "url": "https://anycross.feishu.cn/documentation/connector/ai",
+      "checkedAt": "2026-09-21T07:25:37.137Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "business-7242575222021160963",
+      "name": "旺店通旗舰版",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7242575222021160963",
+      "checkedAt": "2026-09-21T08:18:19.447Z",
+      "documentedLatestVersion": "1.10"
+    },
+    {
+      "key": "platform-plugin_introduction",
+      "name": "插件能力介绍",
+      "url": "https://anycross.feishu.cn/documentation/platform/plugin_introduction",
+      "checkedAt": "2026-09-21T07:40:30.867Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "business-7278886741396783107",
+      "name": "企业微信",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7278886741396783107",
+      "checkedAt": "2026-09-21T08:18:16.327Z",
+      "documentedLatestVersion": "1.9"
+    },
+    {
+      "key": "logic-7207004558394916866",
+      "name": "While 循环",
+      "url": "https://anycross.feishu.cn/documentation/connector/core/7207004558394916866",
+      "checkedAt": "2026-09-21T08:11:54.602Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "platform-anycross-public-ips",
+      "name": "集成平台 IP 白名单",
+      "url": "https://anycross.feishu.cn/documentation/platform/anycross-public-ips",
+      "checkedAt": "2026-09-21T07:57:16.593Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "ai-7387667245655965699",
+      "name": "通义千问（开源版）",
+      "url": "https://anycross.feishu.cn/documentation/connector/ai/7387667245655965699",
+      "checkedAt": "2026-09-21T08:13:25.330Z",
+      "documentedLatestVersion": "1.2"
+    },
+    {
+      "key": "updates-ip",
+      "name": "IP 白名单变更公告",
+      "url": "https://anycross.feishu.cn/documentation/changelog/anycross-public-ips-change-announcement",
+      "checkedAt": "2026-09-21T07:57:57.386Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "business-7387666044279930883",
+      "name": "FireCrawl",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7387666044279930883",
+      "checkedAt": "2026-09-21T08:16:13.709Z",
+      "documentedLatestVersion": "1.1"
+    },
+    {
+      "key": "platform-configure-authentications",
+      "name": "配置应用凭证",
+      "url": "https://anycross.feishu.cn/documentation/platform/configure-authentications",
+      "checkedAt": "2026-09-21T07:40:28.108Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "faq-Subscribe_events",
+      "name": "订阅事件",
+      "url": "https://anycross.feishu.cn/documentation/faq/Subscribe_events",
+      "checkedAt": "2026-09-21T07:59:14.138Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "business-7145065551629385729",
+      "name": "每刻",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7145065551629385729",
+      "checkedAt": "2026-09-21T08:18:12.529Z",
+      "documentedLatestVersion": "1.5"
+    },
+    {
+      "key": "business-7319341275810709507",
+      "name": "管家婆云财贸",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7319341275810709507",
+      "checkedAt": "2026-09-21T08:17:34.752Z",
+      "documentedLatestVersion": "1.2"
+    },
+    {
+      "key": "feishu-7508701248502267923",
+      "name": "飞书绩效",
+      "url": "https://anycross.feishu.cn/documentation/connector/lark/7508701248502267923",
+      "checkedAt": "2026-09-21T08:15:58.221Z",
+      "documentedLatestVersion": "1.0"
+    },
+    {
+      "key": "business-7144984334766784540",
+      "name": "抖音电商",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7144984334766784540",
+      "checkedAt": "2026-09-21T08:17:14.993Z",
+      "documentedLatestVersion": "1.7"
+    },
+    {
+      "key": "helpers-6966220589052739585",
+      "name": "JSON 助手",
+      "url": "https://anycross.feishu.cn/documentation/connector/helper/6966220589052739585",
+      "checkedAt": "2026-09-21T08:12:24.313Z",
+      "documentedLatestVersion": "1.3"
+    },
+    {
+      "key": "business-7216234093166641156",
+      "name": "SAP RFC",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7216234093166641156",
+      "checkedAt": "2026-09-21T08:16:54.316Z",
+      "documentedLatestVersion": "1.0"
+    },
+    {
+      "key": "platform-Practical_guide_to_MCP",
+      "name": "MCP 实战操作",
+      "url": "https://anycross.feishu.cn/documentation/platform/Practical_guide_to_MCP",
+      "checkedAt": "2026-09-21T07:57:43.480Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "business-7398060493959495684",
+      "name": "天眼查",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7398060493959495684",
+      "checkedAt": "2026-09-21T08:18:17.654Z",
+      "documentedLatestVersion": "1.1"
+    },
+    {
+      "key": "triggers-7304198911202820099",
+      "name": "Grafana",
+      "url": "https://anycross.feishu.cn/documentation/connector/trigger/7304198911202820099",
+      "checkedAt": "2026-09-21T08:12:58.203Z",
+      "documentedLatestVersion": "1.1"
+    },
+    {
+      "key": "business-7480086480004726812",
+      "name": "金蝶云星辰",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7480086480004726812",
+      "checkedAt": "2026-09-21T08:17:49.538Z",
+      "documentedLatestVersion": "1.1"
+    },
+    {
+      "key": "ai-7386939794292490243",
+      "name": "通义千问",
+      "url": "https://anycross.feishu.cn/documentation/connector/ai/7386939794292490243",
+      "checkedAt": "2026-09-21T08:13:24.883Z",
+      "documentedLatestVersion": "1.3"
+    },
+    {
+      "key": "business-7148398266105806850",
+      "name": "滴答清单",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7148398266105806850",
+      "checkedAt": "2026-09-21T08:17:12.589Z",
+      "documentedLatestVersion": "1.4"
+    },
+    {
+      "key": "logic-7090593491864010754",
+      "name": "调用子流程",
+      "url": "https://anycross.feishu.cn/documentation/connector/core/7090593491864010754",
+      "checkedAt": "2026-09-21T08:12:07.339Z",
+      "documentedLatestVersion": "1.1"
+    },
+    {
+      "key": "helpers-6966220415769280540",
+      "name": "动态脚本",
+      "url": "https://anycross.feishu.cn/documentation/connector/helper/6966220415769280540",
+      "checkedAt": "2026-09-21T08:11:14.317Z",
+      "documentedLatestVersion": "2.1"
+    },
+    {
+      "key": "business-7174981833351151617",
+      "name": "抖音",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7174981833351151617",
+      "checkedAt": "2026-09-21T08:17:13.711Z",
+      "documentedLatestVersion": "1.14"
+    },
+    {
+      "key": "business-7000943391668240385",
+      "name": "合思费控",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7000943391668240385",
+      "checkedAt": "2026-09-21T08:17:35.585Z",
+      "documentedLatestVersion": "1.4"
+    },
+    {
+      "key": "business-7387234086508593155",
+      "name": "月之暗面（Moonshot）",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7387234086508593155",
+      "checkedAt": "2026-09-21T08:18:37.027Z",
+      "documentedLatestVersion": "1.2"
+    },
+    {
+      "key": "faq-Use_JavaScript_in_AnyCross",
+      "name": "调试动态脚本",
+      "url": "https://anycross.feishu.cn/documentation/faq/Use_JavaScript_in_AnyCross",
+      "checkedAt": "2026-09-21T07:59:13.465Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "business-7171049560100421635",
+      "name": "e签宝",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7171049560100421635",
+      "checkedAt": "2026-09-21T08:17:22.485Z",
+      "documentedLatestVersion": "2.3"
+    },
+    {
+      "key": "helpers-7020662045452304412",
+      "name": "HTTP Client",
+      "url": "https://anycross.feishu.cn/documentation/connector/helper/7020662045452304412",
+      "checkedAt": "2026-09-21T08:04:51.881Z",
+      "documentedLatestVersion": "2.2"
+    },
+    {
+      "key": "business-7171049871401713668",
+      "name": "抖音飞鱼",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7171049871401713668",
+      "checkedAt": "2026-09-21T08:17:16.110Z",
+      "documentedLatestVersion": "1.4"
+    },
+    {
+      "key": "platform-debug-and-release-workflow",
+      "name": "调试和发布工作流",
+      "url": "https://anycross.feishu.cn/documentation/platform/debug-and-release-workflow",
+      "checkedAt": "2026-09-21T07:42:22.616Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "business-7474891894193963012",
+      "name": "用友 U9 Cloud",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7474891894193963012",
+      "checkedAt": "2026-09-21T08:18:35.614Z",
+      "documentedLatestVersion": "0.1"
+    },
+    {
+      "key": "business-7169502362674249732",
+      "name": "Microsoft SQL Server",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7169502362674249732",
+      "checkedAt": "2026-09-21T08:16:21.690Z",
+      "documentedLatestVersion": "1.5"
+    },
+    {
+      "key": "platform-using-the-workflow-editor",
+      "name": "使用工作流编辑器",
+      "url": "https://anycross.feishu.cn/documentation/platform/using-the-workflow-editor",
+      "checkedAt": "2026-09-21T07:42:22.217Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "updates-release-notes",
+      "name": "更新简报",
+      "url": "https://anycross.feishu.cn/documentation/changelog/what-is-new",
+      "checkedAt": "2026-09-21T07:58:00.643Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "ai-7346043115309957124",
+      "name": "火山方舟大模型",
+      "url": "https://anycross.feishu.cn/documentation/connector/ai/7346043115309957124",
+      "checkedAt": "2026-09-21T08:13:08.672Z",
+      "documentedLatestVersion": "1.3"
+    },
+    {
+      "key": "business-7478585456216997907",
+      "name": "差旅壹号",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7478585456216997907",
+      "checkedAt": "2026-09-21T08:17:01.470Z",
+      "documentedLatestVersion": "1.0"
+    },
+    {
+      "key": "feishu-7046648901651234817",
+      "name": "飞书任务",
+      "url": "https://anycross.feishu.cn/documentation/connector/lark/7046648901651234817",
+      "checkedAt": "2026-09-21T08:15:37.358Z",
+      "documentedLatestVersion": "1.18"
+    },
+    {
+      "key": "helpers-7225949795609526274",
+      "name": "XML助手",
+      "url": "https://anycross.feishu.cn/documentation/connector/helper/7225949795609526274",
+      "checkedAt": "2026-09-21T08:12:27.497Z",
+      "documentedLatestVersion": "1.0"
+    },
+    {
+      "key": "business-7145348891720843268",
+      "name": "高德地图",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7145348891720843268",
+      "checkedAt": "2026-09-21T08:17:33.970Z",
+      "documentedLatestVersion": "1.5"
+    },
+    {
+      "key": "faq-clipboard",
+      "name": "设置剪贴板权限",
+      "url": "https://anycross.feishu.cn/documentation/faq/clipboard",
+      "checkedAt": "2026-09-21T07:59:13.834Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "business-7395127184777543708",
+      "name": "企查查",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7395127184777543708",
+      "checkedAt": "2026-09-21T08:18:13.768Z",
+      "documentedLatestVersion": "1.4"
+    },
+    {
+      "key": "platform-workflow-run-benefits",
+      "name": "管理工作流运行权益",
+      "url": "https://anycross.feishu.cn/documentation/platform/workflow-run-benefits#%E4%B8%80%E3%80%81%E5%8A%9F%E8%83%BD%E7%AE%80%E4%BB%8B",
+      "checkedAt": "2026-09-21T07:57:36.660Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "feishu-7182821073413586948",
+      "name": "飞书个人设置",
+      "url": "https://anycross.feishu.cn/documentation/connector/lark/7182821073413586948",
+      "checkedAt": "2026-09-21T08:15:56.236Z",
+      "documentedLatestVersion": "1.3"
+    },
+    {
+      "key": "triggers-7307150369699053572",
+      "name": "Prometheus",
+      "url": "https://anycross.feishu.cn/documentation/connector/trigger/7307150369699053572",
+      "checkedAt": "2026-09-21T08:12:57.213Z",
+      "documentedLatestVersion": "1.0"
+    },
+    {
+      "key": "feishu-6966220145001758723",
+      "name": "飞书消息",
+      "url": "https://anycross.feishu.cn/documentation/connector/lark/6966220145001758723",
+      "checkedAt": "2026-09-21T08:14:46.981Z",
+      "documentedLatestVersion": "2.18"
+    },
+    {
+      "key": "business-7174985628592177180",
+      "name": "云学堂",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7174985628592177180",
+      "checkedAt": "2026-09-21T08:18:37.865Z",
+      "documentedLatestVersion": "1.6"
+    },
+    {
+      "key": "helpers-7182772801559117852",
+      "name": "逻辑助手",
+      "url": "https://anycross.feishu.cn/documentation/connector/helper/7182772801559117852",
+      "checkedAt": "2026-09-21T08:12:37.197Z",
+      "documentedLatestVersion": "1.1"
+    },
+    {
+      "key": "feishu-7437014603689050114",
+      "name": "飞书群组",
+      "url": "https://anycross.feishu.cn/documentation/connector/lark/7437014603689050114",
+      "checkedAt": "2026-09-21T08:14:59.492Z",
+      "documentedLatestVersion": "1.3"
+    },
+    {
+      "key": "helpers-7238813954103967748",
+      "name": "邮件助手",
+      "url": "https://anycross.feishu.cn/documentation/connector/helper/7238813954103967748",
+      "checkedAt": "2026-09-21T08:12:26.659Z",
+      "documentedLatestVersion": "1.0"
+    },
+    {
+      "key": "business-7174982538933338114",
+      "name": "TAPD",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7174982538933338114",
+      "checkedAt": "2026-09-21T08:16:57.999Z",
+      "documentedLatestVersion": "1.7"
+    },
+    {
+      "key": "platform-using-expressions",
+      "name": "使用表达式",
+      "url": "https://anycross.feishu.cn/documentation/platform/using-expressions",
+      "checkedAt": "2026-09-21T07:42:55.265Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "business-7044785906154307612",
+      "name": "分贝通",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7044785906154307612",
+      "checkedAt": "2026-09-21T08:17:23.680Z",
+      "documentedLatestVersion": "1.4"
+    },
+    {
+      "key": "helpers-7041870175393562625",
+      "name": "时间和日期助手",
+      "url": "https://anycross.feishu.cn/documentation/connector/helper/7041870175393562625",
+      "checkedAt": "2026-09-21T08:12:09.849Z",
+      "documentedLatestVersion": "1.8"
+    },
+    {
+      "key": "logic-7017038996752613404",
+      "name": "延迟",
+      "url": "https://anycross.feishu.cn/documentation/connector/core/7017038996752613404",
+      "checkedAt": "2026-09-21T08:11:55.221Z",
+      "documentedLatestVersion": "1.1"
+    },
+    {
+      "key": "ai-7384026548515143683",
+      "name": "豆包大模型（尝鲜版）",
+      "url": "https://anycross.feishu.cn/documentation/connector/ai/7384026548515143683",
+      "checkedAt": "2026-09-21T08:13:08.003Z",
+      "documentedLatestVersion": "1.2"
+    },
+    {
+      "key": "faq-platform_privilege",
+      "name": "平台权限",
+      "url": "https://anycross.feishu.cn/documentation/faq/platform_privilege#%E7%A1%AE%E8%AE%A4%E5%85%B7%E6%9C%89%E9%9B%86%E6%88%90%E5%B9%B3%E5%8F%B0%E6%9D%83%E9%99%90",
+      "checkedAt": "2026-09-21T07:59:24.910Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "business-7262619997644947460",
+      "name": "用友 U8 Cloud",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7262619997644947460",
+      "checkedAt": "2026-09-21T08:18:34.322Z",
+      "documentedLatestVersion": "1.5"
+    },
+    {
+      "key": "business-7293478892214419458",
+      "name": "SAP SuccessFactors",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7293478892214419458",
+      "checkedAt": "2026-09-21T08:16:55.165Z",
+      "documentedLatestVersion": "1.1"
+    },
+    {
+      "key": "logic-7090592083936821276",
+      "name": "子流程响应",
+      "url": "https://anycross.feishu.cn/documentation/connector/core/7090592083936821276",
+      "checkedAt": "2026-09-21T08:12:07.941Z",
+      "documentedLatestVersion": "1.1"
+    },
+    {
+      "key": "platform-create-a-connector",
+      "name": "创建连接器",
+      "url": "https://anycross.feishu.cn/documentation/platform/create-a-connector",
+      "checkedAt": "2026-09-21T07:41:56.085Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "feishu-6992872018618155009",
+      "name": "飞书日历",
+      "url": "https://anycross.feishu.cn/documentation/connector/lark/6992872018618155009",
+      "checkedAt": "2026-09-21T08:15:28.265Z",
+      "documentedLatestVersion": "1.15"
+    },
+    {
+      "key": "logic-7207004557832912898",
+      "name": "分支",
+      "url": "https://anycross.feishu.cn/documentation/connector/core/7207004557832912898",
+      "checkedAt": "2026-09-21T08:11:53.457Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "platform-develop_authentication",
+      "name": "开发自定义认证",
+      "url": "https://anycross.feishu.cn/documentation/platform/develop_authentication",
+      "checkedAt": "2026-09-21T07:41:56.610Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "feishu-6979047605984559106",
+      "name": "飞书通讯录",
+      "url": "https://anycross.feishu.cn/documentation/connector/lark/6979047605984559106",
+      "checkedAt": "2026-09-21T08:15:27.240Z",
+      "documentedLatestVersion": "2.12"
+    },
+    {
+      "key": "catalog-logic",
+      "name": "逻辑组件",
+      "url": "https://anycross.feishu.cn/documentation/connector/core",
+      "checkedAt": "2026-09-21T07:25:36.546Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "feishu-7309041693369122817",
+      "name": "飞书 aPaaS",
+      "url": "https://anycross.feishu.cn/documentation/connector/lark/7309041693369122817",
+      "checkedAt": "2026-09-21T08:15:41.440Z",
+      "documentedLatestVersion": "1.9"
+    },
+    {
+      "key": "business-7328326782552997891",
+      "name": "同程商旅",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7328326782552997891",
+      "checkedAt": "2026-09-21T08:18:18.516Z",
+      "documentedLatestVersion": "1.2"
+    },
+    {
+      "key": "business-7145397718192668673",
+      "name": "GitLab",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7145397718192668673",
+      "checkedAt": "2026-09-21T08:16:16.369Z",
+      "documentedLatestVersion": "1.7"
+    },
+    {
+      "key": "platform-handlingErrors",
+      "name": "使用错误处理",
+      "url": "https://anycross.feishu.cn/documentation/platform/handlingErrors",
+      "checkedAt": "2026-09-21T07:43:06.693Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "business-7143499728880173057",
+      "name": "炎黄 BPM（AWS PaaS）",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7143499728880173057",
+      "checkedAt": "2026-09-21T08:18:30.731Z",
+      "documentedLatestVersion": "1.5"
+    },
+    {
+      "key": "business-7169494619368488964",
+      "name": "Oracle Database",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7169494619368488964",
+      "checkedAt": "2026-09-21T08:16:41.409Z",
+      "documentedLatestVersion": "1.4"
+    },
+    {
+      "key": "triggers-7020663004324757532",
+      "name": "手动触发器",
+      "url": "https://anycross.feishu.cn/documentation/connector/trigger/7020663004324757532",
+      "checkedAt": "2026-09-21T08:12:53.553Z",
+      "documentedLatestVersion": "1.0"
+    },
+    {
+      "key": "triggers-6984230219439718402",
+      "name": "网址触发器",
+      "url": "https://anycross.feishu.cn/documentation/connector/trigger/6984230219439718402",
+      "checkedAt": "2026-09-21T08:12:44.574Z",
+      "documentedLatestVersion": "1.5"
+    },
+    {
+      "key": "ai-7387236685641089026",
+      "name": "文心一言",
+      "url": "https://anycross.feishu.cn/documentation/connector/ai/7387236685641089026",
+      "checkedAt": "2026-09-21T08:13:26.335Z",
+      "documentedLatestVersion": "1.2"
+    },
+    {
+      "key": "feishu-7104160406830350337",
+      "name": "飞书云文档文件管理",
+      "url": "https://anycross.feishu.cn/documentation/connector/lark/7104160406830350337",
+      "checkedAt": "2026-09-21T08:15:40.726Z",
+      "documentedLatestVersion": "1.16"
+    },
+    {
+      "key": "business-7268213198627880963",
+      "name": "红瓦 BIM",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7268213198627880963",
+      "checkedAt": "2026-09-21T08:17:37.238Z",
+      "documentedLatestVersion": "1.1"
+    },
+    {
+      "key": "updates-connectors",
+      "name": "连接器更新汇总",
+      "url": "https://anycross.feishu.cn/documentation/changelog/changelog-summary-for-connectors",
+      "checkedAt": "2026-09-21T07:58:03.866Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "platform-project-management",
+      "name": "管理项目与项目资源",
+      "url": "https://anycross.feishu.cn/documentation/platform/project-management",
+      "checkedAt": "2026-09-21T07:41:55.748Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "business-7671933009943088417",
+      "name": "畅捷通 T+",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7671933009943088417",
+      "checkedAt": "2026-09-21T08:17:11.766Z",
+      "documentedLatestVersion": "1.1"
+    },
+    {
+      "key": "feishu-7143122700784058369",
+      "name": "飞书应用信息",
+      "url": "https://anycross.feishu.cn/documentation/connector/lark/7143122700784058369",
+      "checkedAt": "2026-09-21T08:15:55.445Z",
+      "documentedLatestVersion": "1.12"
+    },
+    {
+      "key": "platform-view-runtime-logs",
+      "name": "查看运行日志",
+      "url": "https://anycross.feishu.cn/documentation/platform/view-runtime-logs",
+      "checkedAt": "2026-09-21T07:40:28.832Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "business-7142797547675844636",
+      "name": "纷享销客",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7142797547675844636",
+      "checkedAt": "2026-09-21T08:17:33.122Z",
+      "documentedLatestVersion": "1.8"
+    },
+    {
+      "key": "triggers-6991656024193138689",
+      "name": "定时任务",
+      "url": "https://anycross.feishu.cn/documentation/connector/trigger/6991656024193138689",
+      "checkedAt": "2026-09-21T08:12:54.767Z",
+      "documentedLatestVersion": "1.5"
+    },
+    {
+      "key": "business-7179137268861435905",
+      "name": "SAP OData",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7179137268861435905",
+      "checkedAt": "2026-09-21T08:16:46.932Z",
+      "documentedLatestVersion": "1.0"
+    },
+    {
+      "key": "business-7322387847708852228",
+      "name": "Netsuite",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7322387847708852228",
+      "checkedAt": "2026-09-21T08:16:39.019Z",
+      "documentedLatestVersion": "1.2"
+    },
+    {
+      "key": "business-7174984716536315932",
+      "name": "巨量千川",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7174984716536315932",
+      "checkedAt": "2026-09-21T08:17:54.207Z",
+      "documentedLatestVersion": "1.14"
+    },
+    {
+      "key": "business-7145395332698914819",
+      "name": "Jira Cloud",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7145395332698914819",
+      "checkedAt": "2026-09-21T08:16:17.209Z",
+      "documentedLatestVersion": "1.10"
+    },
+    {
+      "key": "helpers-7203195743648284700",
+      "name": "消息卡片助手",
+      "url": "https://anycross.feishu.cn/documentation/connector/helper/7203195743648284700",
+      "checkedAt": "2026-09-21T08:12:10.764Z",
+      "documentedLatestVersion": "1.2"
+    },
+    {
+      "key": "platform-ChannelContext",
+      "name": "Channel Context 使用指南",
+      "url": "https://anycross.feishu.cn/documentation/platform/ChannelContext",
+      "checkedAt": "2026-09-21T07:42:59.411Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "triggers-7090592763460223004",
+      "name": "子流程触发器",
+      "url": "https://anycross.feishu.cn/documentation/connector/trigger/7090592763460223004",
+      "checkedAt": "2026-09-21T08:12:55.393Z",
+      "documentedLatestVersion": "1.1"
+    },
+    {
+      "key": "logic-6984229898000793602",
+      "name": "同步网址触发回调",
+      "url": "https://anycross.feishu.cn/documentation/connector/core/6984229898000793602",
+      "checkedAt": "2026-09-21T08:12:06.640Z",
+      "documentedLatestVersion": "1.3"
+    },
+    {
+      "key": "helpers-7211043533062029313",
+      "name": "设置变量",
+      "url": "https://anycross.feishu.cn/documentation/connector/helper/7211043533062029313",
+      "checkedAt": "2026-09-21T08:12:38.743Z",
+      "documentedLatestVersion": "1.2"
+    },
+    {
+      "key": "platform-mcp-server-devkit",
+      "name": "MCP 服务介绍",
+      "url": "https://anycross.feishu.cn/documentation/platform/mcp-server-devkit",
+      "checkedAt": "2026-09-21T07:57:39.931Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "helpers-7174679275541725188",
+      "name": "字符串助手",
+      "url": "https://anycross.feishu.cn/documentation/connector/helper/7174679275541725188",
+      "checkedAt": "2026-09-21T08:12:13.300Z",
+      "documentedLatestVersion": "1.2"
+    },
+    {
+      "key": "platform-reference-and-manage-project-configuration",
+      "name": "引用与管理项目配置",
+      "url": "https://anycross.feishu.cn/documentation/platform/reference-and-manage-project-configuration",
+      "checkedAt": "2026-09-21T07:43:02.758Z",
+      "documentedLatestVersion": null
+    },
+    {
+      "key": "business-7171342540484984834",
+      "name": "Jira Server",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7171342540484984834",
+      "checkedAt": "2026-09-21T08:16:18.156Z",
+      "documentedLatestVersion": "1.3"
+    },
+    {
+      "key": "business-7170992974405353474",
+      "name": "简道云",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7170992974405353474",
+      "checkedAt": "2026-09-21T08:17:40.200Z",
+      "documentedLatestVersion": "1.6"
+    },
+    {
+      "key": "business-7145026798546386948",
+      "name": "GitHub",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7145026798546386948",
+      "checkedAt": "2026-09-21T08:16:15.184Z",
+      "documentedLatestVersion": "1.10"
+    },
+    {
+      "key": "business-7294245207649058844",
+      "name": "旺店通企业版",
+      "url": "https://anycross.feishu.cn/documentation/connector/biz/7294245207649058844",
+      "checkedAt": "2026-09-21T08:18:20.631Z",
+      "documentedLatestVersion": "1.3"
+    },
+    {
+      "key": "helpers-6966220108586876932",
+      "name": "列表助手",
+      "url": "https://anycross.feishu.cn/documentation/connector/helper/6966220108586876932",
+      "checkedAt": "2026-09-21T08:09:46.990Z",
+      "documentedLatestVersion": "1.3"
+    }
+  ]
+}

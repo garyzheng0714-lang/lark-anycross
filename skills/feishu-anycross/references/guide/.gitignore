@@ -1,0 +1,10 @@
+.DS_Store
+.env
+.env.*
+*.log
+.private/
+sources/official/
+sources/images/
+sources/ui/
+sources/schemas/
+RESEARCH_STATUS.md
