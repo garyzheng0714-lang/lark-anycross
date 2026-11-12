@@ -1,4 +1,4 @@
-# AnyCross Guide
+# lark-anycross 资料库
 
 飞书集成平台 AnyCross 的非官方中文操作白皮书，面向可视化工作流搭建与浏览器 Computer Use。
 
@@ -37,7 +37,7 @@ rg -n '发送普通消息|创建记录|pageToken' OPERATIONS.md manuals guides
 
 文档区分官方记载、界面观察、整理建议与待验证项。已知笔误和冲突单独列出，未验证的导出 schema、旧版本行为和字段不会被编造成确定结论。执行工作流仍需用户对目标项目及动作的有效授权。
 
-欢迎带着组件、操作、版本和来源提交勘误，见 [贡献说明](https://github.com/garyzheng0714-lang/anycross-guide/blob/main/.github/CONTRIBUTING.md)。
+欢迎带着组件、操作、版本和来源提交勘误，见 [贡献说明](https://github.com/garyzheng0714-lang/lark-anycross/blob/main/.github/CONTRIBUTING.md)。
 
 ## 许可证
 

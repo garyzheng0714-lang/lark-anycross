@@ -1,5 +1,5 @@
 {
-  "name": "anycross-guide",
+  "name": "lark-anycross",
   "description": "飞书集成平台（AnyCross）智能体技能和组件资料库",
   "owner": {
     "name": "garyzheng0714-lang",
@@ -7,11 +7,11 @@
   },
   "plugins": [
     {
-      "name": "feishu-anycross",
+      "name": "lark-anycross",
       "source": "./",
       "description": "让智能体查、搭、改飞书集成平台的工作流，配触发器、回调和单点登录，附 124 个组件的资料库",
       "license": "MIT",
-      "repository": "https://github.com/garyzheng0714-lang/anycross-guide"
+      "repository": "https://github.com/garyzheng0714-lang/lark-anycross"
     }
   ]
 }

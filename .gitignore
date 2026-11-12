@@ -6,5 +6,5 @@
 !/.claude-plugin/
 !/skills/
 # 自己工作流的档案只留本机
-/skills/feishu-anycross/references/workflows/*
-!/skills/feishu-anycross/references/workflows/README.md
+/skills/lark-anycross/references/workflows/*
+!/skills/lark-anycross/references/workflows/README.md
