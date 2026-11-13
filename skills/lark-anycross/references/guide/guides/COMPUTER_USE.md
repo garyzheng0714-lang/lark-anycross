@@ -177,9 +177,9 @@ variable.pageToken
 整理方法（写操作，2026-11-11 实测；先拿用户同意）：
 
 - 写接口要带请求头 `x-csrf-token`，值是 cookie `anycross_csrf_token`。监控页接口不带它时报 CSRF 无效（实测）；带上后建文件夹、挪动、改名都通过。
-- 建文件夹：`POST /webapi/projects/<项目ID>/folders`，`{parentFileID: <文件树根节点 id>, name}`。文件树根节点 `type 4`，文件夹 `type 3`，工作流 `type 2`。界面「+」→「新建文件夹」先建成「未命名文件夹1」，再改名。
+- 建文件夹：`POST /webapi/projects/<项目ID>/folders`，`{parentFileID: <文件树根节点 id>, name}`。文件树根节点 `type 4`，文件夹 `type 3`，工作流 `type 2`。界面「+」→「新建文件夹」先建成「未命名文件夹1」，再改名。连着建两个时第二个回过一次失败（没有 `data`），重试就成了；刚建完的文件夹隔一两秒才出现在文件树里，回读确认再往里挪。（实测，2026-11-14）
 - 文件夹改名：`PATCH /webapi/projects/<项目ID>/folders/<文件夹 id>`，`{name}`。
-- 挪进文件夹：`POST /webapi/projects/<项目ID>/files/batch_move`，`{fileIDs: [...], referenceFileID: <文件夹 id>, position: 2}`。`fileIDs` 是文件树节点的 `id`，不是工作流 ID（`resourceID`）。一次可挪一批。
+- 挪进文件夹：`POST /webapi/projects/<项目ID>/files/batch_move`，`{fileIDs: [...], referenceFileID: <文件夹 id>, position: 2}`。`fileIDs` 是文件树节点的 `id`，不是工作流 ID（`resourceID`）。一次可挪一批，挪进去的顺序就是 `fileIDs` 的顺序。`position: 0` 是挪到 `referenceFileID` 那一项的前面（同一层），拿来排文件夹的先后。（实测，2026-11-14）
 - 批量改项目名（2026-11-12 实测改 18 个）：刚打开控制台时页面会自己跳到某条工作流，这时发出的读项目请求可能拿到空 `data`，脚本跑到一半就断了。每次读写都带重试；按「现名等于新名就跳过、等于旧名才改、都不是就停下报告」写，断了可以直接整段重跑，不会改两遍。改完用 `POST /webapi/project/detail/batch` 整体回读一次，核对名称和每个项目的 `flow.total`、`flow.runningCount`。
 - 改项目名：`PATCH /webapi/projects/<项目ID>`，`{name, desc, icon}`，三项一起提交。先用 `POST /webapi/project/<项目ID>`（请求体 `{}`）读 `data.project` 里原来的 `desc` 和 `icon` 原样带上（界面就是这样提交的；不带会不会被清空没试过）。界面入口：左上角项目名旁「···」→「编辑基本信息」。
 - 整理前按「盘点方法」重查一遍状态再挪，别直接用旧名单：本次整理当天就有一条流程刚被停掉。做完回读文件树，核对每个文件夹里的条数和名单一致、没有多挪漏挪，再逐条比发布和启用状态。
@@ -239,7 +239,7 @@ variable.pageToken
 **新建流程、改名、补回调地址（实测，2026-11-12：在一个项目里用接口建了 17 条，全部校验通过）**
 
 - 新建：`POST /webapi/projects/<项目ID>/flows`，请求体 `{name, desc, connectorID: <触发器的连接器 ID>, createTo: <文件夹在文件树里的 id>}`，返回 `data.flowID`。带了 `createTo` 就直接建在那个文件夹里。建出来的草稿只有一个默认触发器：定时触发器默认是「每天」，网址触发器默认是「异步网址触发器」。请求体里的 `desc` 不生效，建出来描述是空的，要再用下一条的 PATCH 写。（实测，2026-11-13）
-- 改名、改描述：`PATCH /webapi/projects/<项目ID>/flows/<流程ID>`，请求体 `{name, desc}`。流程描述写 266 字也能存。读回时字段叫 `description`（不是 `desc`），改完要等几秒才读得到新的；连着改两条时第二条回过一次 `code 10`，隔一会儿重试就成了。改描述不换版本号。（实测，2026-11-13）
+- 改名、改描述：`PATCH /webapi/projects/<项目ID>/flows/<流程ID>`，请求体 `{name, desc}`。流程描述写 266 字也能存。读回时字段叫 `description`（不是 `desc`），改完要等几秒才读得到新的；连着改两条时第二条回过一次 `code 10`，隔一会儿重试就成了。改描述不换版本号。（实测，2026-11-13）2026-11-14 一次改了 20 条的名字和描述，每条隔 1.2 秒，全部一次成功；改完逐条比，版本号、发布和启用状态、草稿都没变。改名前先查别的流程有没有按流程名认它：告警触发器 `resourceList` 里的 `resourceName` 只是显示，盯的是 `resourceId`；但告警出参的 `resource_name` 是运行时的名字，拿它记的键会对不上，见 [配方](RECIPES.md) 里「连续失败 3 次才提醒」。
 - **描述千万别超过 300 字。** 界面限 300 字，接口不拦：315 字照样存进去、读得回来。存进去以后，这条流程的任何更新都先校验存着的描述，回 `code 13`（有时 `3`）`flow desc too long`：改名、改描述（改成短的也不行）、存草稿、调试、发布全被拒，界面「编辑基本信息」也存不了。`PUT /webapi/flows/<流程ID>/info` 是 404，「创建副本」只收 `{name, targetProject}`、出来是一条新流程。没有接口能解开。写之前在页面里数字数（`[...desc].length <= 300`）。（实测，2026-11-13：7 条草稿被锁）
 - 被锁了只能新建一条流程，把旧草稿原样写进去，再换掉所有指向「自己」的东西：网址触发器的回调地址（新取一个）、调自己的 HTTP 节点地址、子流程调用里传的 `flow_id`、卡片里 `…/workflow/<流程ID>` 的控制台链接、按流程 ID 起名的数据存储键。别的流程里也要换：告警触发器盯的流程 ID、告警或看门脚本里写的 ID 和网址。换完把新 ID、新网址替换回旧的，和旧草稿逐叶子比应该完全相同；再扫一遍全项目草稿，确认没有流程还引用旧 ID 或旧网址。旧的那条改不了名，也删不掉、导出不了：`DELETE /webapi/projects/<项目ID>/flows/<流程ID>` 回 `code 13` `flow desc too long`，导出接口回 `code 3` 同样的话。只能把它在文件树里挪走（`files/batch_move` 只动文件树，不碰流程本身，能挪），放进「停用与闲置」这类文件夹，免得和新的同名流程混。要它的内容，用 `GET /webapi/v2/flows/<流程ID>` 读草稿存一份。彻底删只能找飞书技术支持。（实测，2026-11-13 重建 7 条；11-14 删、导出都被拒，挪文件夹成功）
 - 用接口建的网址触发器没有回调地址，校验会报 `errorEmptyWebhookURL`。办法是先调 `GET /webapi/trigger/webhook?flowId=<流程ID>` 取 `data.webhook`（界面切换触发器类型时调的就是它），再写进触发器的 `parameters`：`{webhook, body_type: "json", authorization_config: {authorization_method: 0}}`。回调地址就是钥匙，只在页面里传，不要打印。
