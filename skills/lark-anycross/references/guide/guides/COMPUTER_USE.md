@@ -178,6 +178,8 @@ variable.pageToken
 整理方法（写操作，2026-11-11 实测；先拿用户同意）：
 
 - 写接口要带请求头 `x-csrf-token`，值是 cookie `anycross_csrf_token`。监控页接口不带它时报 CSRF 无效（实测）；带上后建文件夹、挪动、改名都通过。
+- 这个 token 会换。原来好好的调用突然回 `code 15100011`、`data` 里只有 `troubleshooting`，就是它过期了：重新从 cookie 读一次再调。（实测，2026-11-15，项目列表接口）
+- 页面里一段 JS 跑超过约 45 秒，浏览器插件报 `Runtime.evaluate timed out`，可页面里的脚本还在跑。连着调试几次这种长活，把结果存进 `window` 变量，过一会儿再读。（实测，2026-11-15）
 - 建文件夹：`POST /webapi/projects/<项目ID>/folders`，`{parentFileID: <文件树根节点 id>, name}`。文件树根节点 `type 4`，文件夹 `type 3`，工作流 `type 2`。界面「+」→「新建文件夹」先建成「未命名文件夹1」，再改名。连着建两个时第二个回过一次失败（没有 `data`），重试就成了；刚建完的文件夹隔一两秒才出现在文件树里，回读确认再往里挪。（实测，2026-11-14）
 - 文件夹改名：`PATCH /webapi/projects/<项目ID>/folders/<文件夹 id>`，`{name}`。
 - 挪进文件夹：`POST /webapi/projects/<项目ID>/files/batch_move`，`{fileIDs: [...], referenceFileID: <文件夹 id>, position: 2}`。`fileIDs` 是文件树节点的 `id`，不是工作流 ID（`resourceID`）。一次可挪一批，挪进去的顺序就是 `fileIDs` 的顺序。`position: 0` 是挪到 `referenceFileID` 那一项的前面（同一层），拿来排文件夹的先后。（实测，2026-11-14）
@@ -217,6 +219,7 @@ variable.pageToken
   - 发卡片的流程调试时不发进真群：流程里有「按 `open_message_id` 原地更新卡片」分支的（卡片上的刷新按钮走这条），调试输入里带一个假的 `open_message_id`，卡片照常组装，最后「更新卡片消息」那步因为消息编号不存在而失败，什么也没发出去。卡片变量的值看「组装卡片」那步的节点日志。发送节点一个字没改，发布前也就不用改回去。（实测，2026-11-14）
   - 调试运行的节点日志：`POST /webapi/flow_log/search_node_log`，请求体 `{flowInstanceID, page, pageSize, debug: true}`。不带 `debug: true` 查不到调试那次。（实测，2026-11-14）
 - 发布：界面点「发布」时依次调 `POST /webapi/flows/<流程ID>/v2/validate_variable`、`POST /webapi/flows/<流程ID>/v2/validate`（请求体 `{"isPublish": true, "validateMode": 1}`，要 0 条），再 `POST /webapi/projects/<项目ID>/flows/<流程ID>/publish`，请求体 `{description}`，写接口都带 `x-csrf-token`。发布就是启用，弹窗原话是「发布后，工作流将开始运行」；读回 `isPublished`、`isEnabled` 都是 true，`latestVersion.id` 换成新的。发完拿 `GET /webapi/flows/<流程ID>/versions/<版本ID>` 和草稿逐个节点比一次。（实测，2026-11-12，发了 6 条）已发布的流程再发一次新版本也是这个接口；回 `code 0` 后马上读，`latestVersion.id` 还是旧的，等几秒才换成新的，别当成没发上又发一遍。（实测，2026-11-13）
+- 草稿和线上版本比：`GET /webapi/flows/<流程ID>/versions/<版本ID>` 的定义在 `data.flowDefinition`（JSON 字符串，里面也是 `steps`、`structure`）。内容一样时字段顺序也可能不同，直接比字符串，9 个节点里 7 个「不同」；按键名排好序再比，0 处不同。`latestVersion` 是对象，版本号取 `latestVersion.id`。（实测，2026-11-15）
   - 接口发布不带配置组：请求体只有 `{description}`，发出来的版本 `referencedVariables.selectedGroup` 是「默认值」，不沿用上一版选的组。有一条流程上一版选的是「配置组 1」，那组没填值、实际用的也是默认值，所以结果一样。项目里别的配置组填了不同的值时，用接口发布前先比两组的值，要用别的组就在界面发布、在弹窗里选。（实测，2026-11-14，一条）
 - 停用、启用：`POST /webapi/flows/<流程ID>/disable` 或 `/enable`，请求体 `{}`。只改开关，版本号不变。停用不打断正在跑的那次运行，它照样跑到底。（实测，2026-11-12）
 - 没发布或已停用的流程，网址触发器回 HTTP 404，body 是 `{"code":"3","message":"not found"}`，平台不留运行记录，盯着它的告警也不会响。调用方调到这种地址就是悄悄失败，所以先确认被调的流程已发布、已启用，再改调用方。（实测，2026-11-12）
@@ -271,6 +274,8 @@ variable.pageToken
 - 卡片模板：「组装卡片消息内容」节点存的是卡片 ID 和变量映射。`GET /webapi/card_helper/cards/<卡片ID>/versions/latest` 只回模板名和变量列表，看不到卡片正文；正文在飞书卡片搭建工具 `open.feishu.cn/cardkit/editor?cardId=<卡片ID>` 里看。改流程之前先在那里确认标题、副标题里哪些字写死、哪些是 `${变量}`。（实测，2026-11-14）
 - 发消息不用卡片模板：飞书「发送消息」（连接器 `7446667496572157956`，操作 `7446667496609677331`）参数 `{receive_id_type, receive_id, msg_type, content}`。`msg_type` 填 `interactive`，`content` 引用脚本拼好的卡片 JSON 字符串（`{config, header, elements}` 那种 1.0 写法），能直接发出去（code 0）。复用现成卡片模板之前先看它的标题是不是写死了别的业务。（实测，2026-11-14）
 - 试提醒分支又不发进群：把发消息节点的 `receive_id_type` 临时改成 `union_id`，`receive_id` 填用户本人的，调试让它走一次提醒分支，用户私聊收到卡片。再把草稿改回去，和改前逐项比，把调试写进数据存储的状态也恢复。本人的 ID 不打印：写进本机只有自己能读的文件，用上面「把本机文件交给页面」的办法传进去，用完删掉文件。（实测，2026-11-14）
+- 换收件群：发消息节点在界面选了群以后，群 ID 存在三处：`parameters.receive_id.value`（`oc_` 开头），`parametersExtra.dataConversion["[\"receive_id\"]"].payload.value` 和 `parametersExtra.attachment["[\"receive_id\"]"].originValue`（后两处前面多了 `anycross_chat_group_`）。用接口换群，三处一起改。改完读回草稿，只差这三处和节点名、描述；校验 0 错。发布前调试走一次提醒分支，卡片到了新群。（实测，2026-11-15）
+- 发消息用的是凭证背后那个飞书应用的机器人，它得先在目标群里（文档）。凭证是哪个应用：`GET /webapi/connection_profiles` 的 `data.connProfiles[]` 按节点 `auth.credentials.value` 找，`name` 就是凭证名。群里的「自定义机器人」只认 webhook 网址，没有应用凭证，发消息节点用不了它（推断）。把应用机器人拉进群：先在它已经在的群里用 `lark-cli im +chat-members-list --chat-id <群> --member-types bot --as user` 读 `bots[].app_id`，再 `lark-cli im chat.members create --chat-id <新群> --member-id-type app_id --data '{"id_list":["<应用 ID>"]}' --as user`，读回 `bots` 里有它。群 ID 和应用 ID 都写进本机只有自己能读的文件，不打印。（实测，2026-11-15）
 - 嵌套：While 里套并行循环、并行循环里再套 While，三层能保存，也能通过校验。只验到校验这一步，没有实际跑过。
 - 并行循环的每一圈共用同一组流程变量。有的流程拿一个流程变量（例如 `should_continue`）控制每条记录「写失败就重试」的 While，各圈会互相改这个变量，结果有的记录被写好几次，有的一次也没写，节点却全显示成功。（现象实测，原因推断，2026-11-12）
   - 实测：订单增量每轮取到约 40 条，只写进 31～36 条，每轮漏 3～7 条。全量的一页 200 条里，151 条写了 1 次、34 条写了 2～5 次、15 条一次没写；那天整次全量 7.1 万条漏了约 6900 条。
