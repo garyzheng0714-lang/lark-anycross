@@ -183,6 +183,7 @@ variable.pageToken
 - 挪进文件夹：`POST /webapi/projects/<项目ID>/files/batch_move`，`{fileIDs: [...], referenceFileID: <文件夹 id>, position: 2}`。`fileIDs` 是文件树节点的 `id`，不是工作流 ID（`resourceID`）。一次可挪一批，挪进去的顺序就是 `fileIDs` 的顺序。`position: 0` 是挪到 `referenceFileID` 那一项的前面（同一层），拿来排文件夹的先后。（实测，2026-11-14）
 - 批量改项目名（2026-11-12 实测改 18 个）：刚打开控制台时页面会自己跳到某条工作流，这时发出的读项目请求可能拿到空 `data`，脚本跑到一半就断了。每次读写都带重试；按「现名等于新名就跳过、等于旧名才改、都不是就停下报告」写，断了可以直接整段重跑，不会改两遍。改完用 `POST /webapi/project/detail/batch` 整体回读一次，核对名称和每个项目的 `flow.total`、`flow.runningCount`。
 - 改项目名：`PATCH /webapi/projects/<项目ID>`，`{name, desc, icon}`，三项一起提交。先用 `POST /webapi/project/<项目ID>`（请求体 `{}`）读 `data.project` 里原来的 `desc` 和 `icon` 原样带上（界面就是这样提交的；不带会不会被清空没试过）。界面入口：左上角项目名旁「···」→「编辑基本信息」。
+- 找项目：`POST /webapi/project/detail/batch` 的 `param` 按名字搜（`param: "公共"` 回名字里带这两个字的所有项目）。列表没有按名字排序，`sortType` 只有按更新时间、按创建时间。想让同类项目在列表里看得到一起，名字用同一个前缀，靠搜。（实测，2026-11-15）
 - 整理前按「盘点方法」重查一遍状态再挪，别直接用旧名单：本次整理当天就有一条流程刚被停掉。做完回读文件树，核对每个文件夹里的条数和名单一致、没有多挪漏挪，再逐条比发布和启用状态。
 - 导出：`GET /webapi/projects/-/flows/<工作流ID>/export?name=<名称>`，直接返回 zip。2026 年以前的老流程，导出的 `flow.json` 里没有 `flowID`，核对时改比名称和步骤。
 - 用脚本连续触发下载，Chrome 从第二个起就拦。拦过以后，同一个标签页里手动点也下不了，这是浏览器的多文件下载限制，不要去改浏览器权限。做法：在页面里把几十份 zip 转成 base64 合进一个 JSON；新开一个同源标签页，用 `BroadcastChannel` 把数据传过去，在新页面只下载这一个文件；本机再拆回一个个 zip。
@@ -193,7 +194,7 @@ variable.pageToken
   比对时把这几处排除，再按键名排序后逐步比。
 - 删数据存储里的一个键：项目左栏「数据存储」（地址 `/console/integration/<项目ID>/storage`），上方下拉选数据集合（默认的叫 `Default`），搜索框输键名，行尾「删除」，页面里弹「确定删除数据吗？删除后无法恢复」，点红色「删除」，顶上提示「数据已删除」。第一次直接打开这个地址可能跳到「无权限查看资源」，重新打开一次就好。删前扫一遍项目里所有流程的草稿和线上版本，确认没有流程读这个键。（实测，2026-11-14）
 - 删除：`DELETE /webapi/projects/<项目ID>/flows/<工作流ID>`，请求体 `{}`。界面上要输入工作流名称才能删，确认框写着「删除后，该工作流将立即停止，且无法恢复」。没有回收站，删之前先导出、复制，核对通过后再删。
-- 删项目：界面在左上「当前项目」右边的「···」→「删除」，确认框要输入项目名（有「一键填入」）。页面发的是 `DELETE /webapi/projects/<项目ID>`，请求体 `{}`。确认框会晚一两秒才出来，截图可能拍不到，用元素定位找「一键填入」「删除」按钮。删完页面自动跳到别的项目，别在跳过去的项目里接着点。删后 `POST /webapi/project/<项目ID>` 返回 `40001` 没有查看权限，项目列表里也没有了。删项目前先看工作流、项目配置、数据存储是不是都空，项目配置和数据存储跟项目一起没。（实测，2026-11-11 删了 3 个空项目）
+- 删项目：界面在左上「当前项目」右边的「···」→「删除」，确认框要输入项目名（有「一键填入」）。页面发的是 `DELETE /webapi/projects/<项目ID>`，请求体 `{}`。确认框会晚一两秒才出来，截图可能拍不到，用元素定位找「一键填入」「删除」按钮。删完页面自动跳到别的项目，别在跳过去的项目里接着点。删后 `POST /webapi/project/<项目ID>` 返回 `40001` 没有查看权限，项目列表里也没有了。删项目前先看工作流、项目配置、数据存储是不是都空，项目配置和数据存储跟项目一起没。（实测，2026-11-11 删了 3 个空项目） 项目里有没发布的草稿照样能删，回 0，回读项目列表里就没了。（实测，2026-11-15）
 - 「···」菜单里「生成模板」紧挨在「导出」下面，点错会弹出创建并分享模板的窗口，点「取消」就什么都不生成。
 - 一次批量删几十条，可能被 Claude Code 的安全检查以「删除范围无法核实」拦下。先把逐条清单（原项目、名称、原件 ID、副本 ID）写进记录文件给用户看，用户明确确认后再删。
 - 批量删的固定做法（2026-11-11 实测删 57 条）：删前逐条核四件事——原件在原项目文件树里、名字和清单一致、40 天内 0 次运行、副本在备份项目的文件夹里，全过才动手；删每条之前再查一次运行次数，仍为 0 才删，间隔 0.3 秒；接口返回 `code 0 success`。删完回读文件树，确认原件不在了、副本条数一个不少。流程删光后项目本身还在，要不要删项目另问用户。
@@ -211,7 +212,7 @@ variable.pageToken
   - 写入会整个覆盖草稿，所以先把读到的旧定义存一份。
 - 写完校验：`POST /webapi/flows/<流程ID>/v2/validate`，请求体 `{"isPublish": false, "validateMode": 1}`。`data.results` 按节点列出问题，比如没选凭证是 `errorRequireCredentials`。
   - 校验 0 错不等于能跑：它不查分支条件的操作符名（见下面「不为空」那条）。写完至少点一次「调试」，看调试接口的返回。
-- 调试接口：点「调试」时页面发 `POST /webapi/projects/<项目ID>/flows/<流程ID>/debug`，请求体 `{triggerOutput: "<触发器输出的 JSON 文字>", variableGroupId}`，成功回 `data.flowInstanceId`。预检不过也回 HTTP 200，错误码和原因只在 body 的 `code`、`msg` 里，界面不弹提示，看着像点了没反应。要看原因，先在页面里包一层 `fetch`，把这个接口的返回存下来再点。（实测，2026-11-12）
+- 调试接口：点「调试」时页面发 `POST /webapi/projects/<项目ID>/flows/<流程ID>/debug`，请求体 `{triggerOutput: "<触发器输出的 JSON 文字>", variableGroupId}`，成功回 `data.flowInstanceId`。预检不过也回 HTTP 200，错误码和原因只在 body 的 `code`、`msg` 里，界面不弹提示，看着像点了没反应。要看原因，先在页面里包一层 `fetch`，把这个接口的返回存下来再点。（实测，2026-11-12） `variableGroupId` 用不着就别带：带空字符串回 `15000000`（`unmarshal "" into int64`）。（实测，2026-11-14）
   - 想测空列表、没带参数这类少见的输入，别在弹窗的代码框里打字（会自动补括号引号）。同样在包的那层 `fetch` 里，把请求体的 `triggerOutput` 换成自己拼好的 JSON 文字再发出去。调试一样会真的写表，只造不写表或写回原值的输入。（实测，2026-11-12）
   - 发卡片的流程调试时不发进真群：流程里有「按 `open_message_id` 原地更新卡片」分支的（卡片上的刷新按钮走这条），调试输入里带一个假的 `open_message_id`，卡片照常组装，最后「更新卡片消息」那步因为消息编号不存在而失败，什么也没发出去。卡片变量的值看「组装卡片」那步的节点日志。发送节点一个字没改，发布前也就不用改回去。（实测，2026-11-14）
   - 调试运行的节点日志：`POST /webapi/flow_log/search_node_log`，请求体 `{flowInstanceID, page, pageSize, debug: true}`。不带 `debug: true` 查不到调试那次。（实测，2026-11-14）
@@ -247,9 +248,12 @@ variable.pageToken
 - **描述千万别超过 300 字。** 界面限 300 字，接口不拦：315 字照样存进去、读得回来。存进去以后，这条流程的任何更新都先校验存着的描述，回 `code 13`（有时 `3`）`flow desc too long`：改名、改描述（改成短的也不行）、存草稿、调试、发布全被拒，界面「编辑基本信息」也存不了。`PUT /webapi/flows/<流程ID>/info` 是 404，「创建副本」只收 `{name, targetProject}`、出来是一条新流程。没有接口能解开。写之前在页面里数字数（`[...desc].length <= 300`）。（实测，2026-11-13：7 条草稿被锁）
 - 被锁了只能新建一条流程，把旧草稿原样写进去，再换掉所有指向「自己」的东西：网址触发器的回调地址（新取一个）、调自己的 HTTP 节点地址、子流程调用里传的 `flow_id`、卡片里 `…/workflow/<流程ID>` 的控制台链接、按流程 ID 起名的数据存储键。别的流程里也要换：告警触发器盯的流程 ID、告警或看门脚本里写的 ID 和网址。换完把新 ID、新网址替换回旧的，和旧草稿逐叶子比应该完全相同；再扫一遍全项目草稿，确认没有流程还引用旧 ID 或旧网址。旧的那条改不了名，也删不掉、导出不了：`DELETE /webapi/projects/<项目ID>/flows/<流程ID>` 回 `code 13` `flow desc too long`，导出接口回 `code 3` 同样的话。只能把它在文件树里挪走（`files/batch_move` 只动文件树，不碰流程本身，能挪），放进「停用与闲置」这类文件夹，免得和新的同名流程混。要它的内容，用 `GET /webapi/v2/flows/<流程ID>` 读草稿存一份。彻底删只能找飞书技术支持。（实测，2026-11-13 重建 7 条；11-14 删、导出都被拒，挪文件夹成功）
 - 用接口建的网址触发器没有回调地址，校验会报 `errorEmptyWebhookURL`。办法是先调 `GET /webapi/trigger/webhook?flowId=<流程ID>` 取 `data.webhook`（界面切换触发器类型时调的就是它），再写进触发器的 `parameters`：`{webhook, body_type: "json", authorization_config: {authorization_method: 0}}`。回调地址就是钥匙，只在页面里传，不要打印。
+  - 这个接口每调一次给一个新地址：连着调两次，两个不一样。取一次写进触发器就别再调它了；调用方要用的是写进草稿以后触发器 `parameters.webhook` 里存的那个，发布后拿它实调回 200。（实测，2026-11-15）
+  - 写完草稿马上读，可能还是旧的：一次 2.5 秒后读还是旧值，3 秒后再读才是新的。读回比对前等几秒，读到旧值先别重写。（实测，2026-11-15）
 - 间隔触发：`operationId` 换成「间隔触发」那个，`parameters.cronjob` 写 `{trigger_type: "INTERVAL_TRIGGER", interval_trigger_type: "min", interval_trigger_frequency: 15, timezone: "Asia/Shanghai", trigger_day: []}`。不写时区，就是界面默认的 `America/Los_Angeles`。界面上「触发器生效期」默认是「发布后两年内」。
 - 每天触发：用接口新建的定时流程，触发器 `parameters` 是 null，要自己写 `{cronjob: {type: "object", value: {timezone: {type: "string", value: "Asia/Shanghai"}, execute_time: {type: "string", value: "08:30:00"}, trigger_type: {type: "string", value: "DAY_TRIGGER"}}}}`（连接器 `7205203862368632833`，操作 `7205203862750527516`）。调试输入填 `{"timestamp": <当前毫秒>}`。设置页「触发器生效期」只写「默认生效期：发布后两年内」，不给具体日期；到期日按这一版的发布时间算，`GET /webapi/flows/<流程ID>/versions/<版本ID>` 的 `createdAt`（毫秒）就是发布时间。（实测，2026-11-14）
-- 数据存储的集合和里面的值：`GET /api/ud/project/<项目ID>/datastorage/dataset/list?page_size=100&page_num=1` 列项目的数据集合，新项目自带一个叫 `Default` 的，设置里 `expiration_time` 是 180 天（键多久不写会过期、重写会不会重新起算，没验证）；`GET /api/ud/project/<项目ID>/datastorage/dataitem/list?dataset_id=<集合ID>&search_key=&page_size=20&page_num=1` 列里面的键和值。新流程要用数据存储节点，`dataset_id` 从这里读，不用先在画布上加节点。（实测，2026-11-14）
+- 数据存储的集合和里面的值：`GET /api/ud/project/<项目ID>/datastorage/dataset/list?page_size=100&page_num=1` 列项目的数据集合，新项目自带一个叫 `Default` 的，设置里 `expiration_time` 是 180 天（数据存储页每个键有「过期时间 (TTL)」列，当天写的显示 180 天后；页面提示原文是 180 天未活跃自动清除、每条数据的时效在更新或查询后刷新，没实测到期）；`GET /api/ud/project/<项目ID>/datastorage/dataitem/list?dataset_id=<集合ID>&search_key=&page_size=20&page_num=1` 列里面的键和值。新流程要用数据存储节点，`dataset_id` 从这里读，不用先在画布上加节点。（实测，2026-11-14）
+  - 新建数据集合：界面「数据集合管理」→「新建数据集合」，发的是 `POST /api/ud/project/<项目ID>/datastorage/dataset/create`，体 `{"dataset_name": "…", "expiration_time": {"expiration": 180, "unit": "day"}}`。字段名写成 `name` 回 `9499 Invalid Param`。给一类用途单开一个集合，「获取所有键」就不会把别的流程存的大值一起读出来。（实测，2026-11-15）
 - 告警流程：新建时 `connectorID` 填告警触发器的连接器 ID。`parameters.alertRules` 照抄一条已有的规则，只改三处：
   - `ruleName`
   - `resourceList`，每项写成 `{resourceId, resourceName}`
@@ -257,6 +261,7 @@ variable.pageToken
 
   发消息的节点从老告警流程的草稿里整个读出来，原样放进去（凭证和群都在里面），这样校验就能全部通过。
 - 分支条件数组里，每一项是普通对象 `{operator, comparison}`，外面不要再包一层 `{type: "object", value: …}`。包了以后校验报「请输入…节点的分支条件」。
+- 分支条件左边引用脚本出参（如 `$.script-1.result.notify`）时，平台从 `handler` 最后 `return` 的那个对象字面量里认字段。脚本经内部函数返回（`return done(200)`）时，校验报同一句「请输入…节点的分支条件」，界面上条件也显示成空的。把 `handler` 收尾改成直接返回字面量（`var r = run(input); return {status: r.status, notify: r.notify, …};`），同一份草稿校验 0 错。上一条的包装去掉了还报这句，就查这个。（实测，2026-11-15，一条流程改前改后各校验一次）
 - 节点描述太长会报 `errorStepDescLengthExceed`：63 字能过，109 字过不了。
 - 「飞书多维表格」节点的凭证是应用身份：新版（2.19）下拉里写「请选择应用凭证」，老版（2.11）选的也是应用。要读写哪本多维表格，先把这个应用加成那本的协作者，否则运行报 `91403 Forbidden`。校验只给警告 `errorMissingBitableAdminPermission`（`app missing bitableAdminPermission`，级别是 warning），不拦发布，所以校验过了不等于读得到。加了协作者以后，这条警告照样在，但运行能读到，别等它消失。协作者权限管的是整本多维表格，那本里有密码这类列时，别为了读一张表把应用加进整本，把要读的表单独放一本。（实测，2026-11-14）
 - 同步网址触发回调：连接器 `7439321292236619804`，操作 `7439321292245008412`，参数 `{flow_key, status, body, headers}`。`flow_key` 引用 `$.webhook-trigger-1.flow_key`，加节点时自动填好。`status`、`body` 都能写成引用，比如引用前一步脚本返回的 `result.status`、`result.body`，出错时回 503 加一句原因。`headers` 是数组，每项 `{type: object, value: {header_key, value}}`。同步触发器的超时在触发器的 `parameters.timeout`（毫秒）。发布后用网址实调：GET、POST 都回配置的状态码和返回头（`Content-Type: application/json; charset=utf-8`），约 3 秒。（实测，2026-11-14）
@@ -271,6 +276,7 @@ variable.pageToken
   - 实测：订单增量每轮取到约 40 条，只写进 31～36 条，每轮漏 3～7 条。全量的一页 200 条里，151 条写了 1 次、34 条写了 2～5 次、15 条一次没写；那天整次全量 7.1 万条漏了约 6900 条。
   - 并行循环里要重试，别靠流程变量。改用节点自己的「出错重试」，或者改成串行循环。改完数一数「取到几条、写进几条」，用节点日志对。
 - 数据存储的「键」可以填表达式（引用上游的输出），校验能通过。
+- 数据存储「设置值」的 `kv_pairs` 可以整个写成一个引用，指向脚本返回的数组 `[{key, value, value_type: "string"}, …]`，一步写多个键。「获取所有键」（参数 `{dataset_id, page_size, include_value: true}`）出参是 `{result: [{key, value, value_type}], next_page_cursor, warning}`，集合是空的时 `result` 是 `[]`。「获取值」取一个还没写过的键，回 `{result: "{}", warning: "key_not_exist", value_type: "string"}`，节点算成功。（实测，2026-11-15）
 - 子流程（实测，2026-11-12，校验通过并在界面上核对过）：
   - 异步调用子流程：连接器 `7205886702128300033`，操作 `7205886702472757276`，界面显示「异步调用子流程」。参数 `{flow_id: <本流程ID>, sub_flow_id: {type: "subFlow", value: <子流程ID>}, flow_input: {type: "object", value: {}}}`，不用填超时。同步调用是操作 `7205886702433632258`，要多填 `limit_time`（秒）。
   - 子流程触发器：连接器 `7205887880971599873`，操作 `7205887881171681281`，参数 `{sub_flow_id: {type: "refFlow", value: <本流程ID>}, flow_id: <本流程ID>}`。用接口建的定时流程，把触发器这一步直接换成它，校验能过。
