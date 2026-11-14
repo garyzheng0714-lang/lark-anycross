@@ -172,6 +172,7 @@ variable.pageToken
    - `subflow-caller` 的 `parameters.sub_flow_id.value` 是被调流程的 ID。`alert_trigger` 的 `parameters.alertRules` 里有它盯着的流程 ID。
    - 用到项目配置的地方写成 `$.config.<配置名>`，用正则 `\$\.config\.([A-Za-z0-9_\u4e00-\u9fa5]+)` 找。项目里有哪些配置：`POST /webapi/project/variable`，体 `{projectID}`，带 `x-csrf-token`，读 `data.variableNames`。`data.variableGroups[].variables` 是 JSON 字符串，里面有值，可能是密钥，别输出。
    - 已发布版本接口返回的 `referencedVariables` 是对象，多数是 `{}`，不是数组。
+   - 流程页左侧工具栏「配置」侧栏里每项配置旁的「已引用」「未引用」，说的是当前打开的这条流程有没有用它，不是整个项目。单独的「项目配置」页不显示引用情况，配置接口也不返回。要看整个项目谁在用，按上面的正则扫各条流程的线上版本。（实测，2026-11-14：同一项目里老流程全是「已引用」，换成连接器的新流程全是「未引用」）
    - 比草稿和线上：两边 `steps` 按 `id` 排序，`operation` 只留 `connectorId`、`operationId`，转成键名排序的 JSON 再比。235 条里有 14 条不一样。
 
 整理方法（写操作，2026-11-11 实测；先拿用户同意）：
