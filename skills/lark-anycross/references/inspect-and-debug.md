@@ -25,6 +25,7 @@
 | 项目配置 | `POST /webapi/project/variable`，体 `{projectID}`，带 `x-csrf-token` | `data.variableNames` 是配置名。`variableGroups[].variables` 是 JSON 字符串，含值，别输出。流程里引用写成 `$.config.<配置名>`（实测，2026-11） |
 | 凭证列表 | `GET /webapi/connection_profiles` | `data.connProfiles`，有 `generation`（g1 旧版、g2 新版）、`authType`、`owner`。凭证不分项目，列表和详情都没有项目字段（实测，2026-11） |
 | 凭证详情 | 新版 `GET /webapi/v2/connections/<凭证ID>?stage=draft`，旧版 `GET /webapi/connections/<凭证ID>` | 含密钥副本，只看长度或指纹 |
+| 运行次数额度 | `GET /webapi/tenant_rights/current/rights_packages` | 「监控 → 权益管理」页的数据。`data.licensePlan` 有版本名、`rightQuota{quotaType, quota}`（每月总量）、`rightUsage.usage`（本周期已用）、`resetTimezone`；`topUpPack`、`gift` 是加购包和赠送。监控页的正文里读不到额度，要调这个（实测，2026-11-15） |
 
 列全部项目有接口：`POST /webapi/project/detail/batch`，带 `x-csrf-token`，请求体 `{param: "", filterQuery: {projectType: "normal", ignoreQueryDesc: true}, pageQuery: {page, pageSize: 40}, sortType: 1}`，`tenantId` 可以不带，别人分享来的项目（`role: fullEdit`）也在里面。（实测，2026-11）另一个办法是打开编辑页的项目切换下拉，从 React 组件数据（fiber 的 `memoizedProps`）里读，这里能看到 `role`。从全量日志反推只能拿到跑过的项目。（实测）
 
@@ -34,7 +35,7 @@
 
 请求体字段：`timeRange{left,right}`（毫秒）、`projectList`、`flowList`、`status`、`pageSize`、`page`、`asc`、`debug:false`。请求头只要 `content-type: application/json`。（实测）
 
-- `projectList` 必须是二维数组 `[["<项目ID>"]]`。写成一维会报 `cannot unmarshal string into []string`。查多个项目，全放进同一个内层数组 `[["<项目1>","<项目2>"]]`；写成 `[["<项目1>"],["<项目2>"]]` 返回 0 条。不带 `projectList` 返回「参数无效」。（实测，2026-11-12）
+- `projectList` 必须是二维数组 `[["<项目ID>"]]`。写成一维会报 `cannot unmarshal string into []string`。查多个项目，全放进同一个内层数组 `[["<项目1>","<项目2>"]]`；写成 `[["<项目1>"],["<项目2>"]]` 返回 0 条。不带 `projectList` 返回「参数无效」。（实测，2026-11-12）`flowList` 也要写成二维 `[["<流程ID>"]]`，一维回 `code 15000000`（只带 `troubleshooting`）。（实测，2026-11-15）
 - 算全租户同时在跑几个：拉一段时间所有项目的运行记录，按 `startAt`、`endAt` 排成进出事件扫一遍，同时在跑的最大数就是峰值。突然冒出几万次运行的流程，也是这样一眼看出来的。（实测，2026-11-12）
 - `count` 最多 10000，超过时 `tooMany=true`，按时间段或项目拆开查。
 - 每条有 `flowName`、`flowDisabled`、`projectName`、`status`、`statusCode`、`cost`、`errorCnt`。

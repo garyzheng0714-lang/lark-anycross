@@ -259,10 +259,14 @@ variable.pageToken
   - 新建数据集合：界面「数据集合管理」→「新建数据集合」，发的是 `POST /api/ud/project/<项目ID>/datastorage/dataset/create`，体 `{"dataset_name": "…", "expiration_time": {"expiration": 180, "unit": "day"}}`。字段名写成 `name` 回 `9499 Invalid Param`。给一类用途单开一个集合，「获取所有键」就不会把别的流程存的大值一起读出来。（实测，2026-11-15）
 - 告警流程：新建时 `connectorID` 填告警触发器的连接器 ID。`parameters.alertRules` 照抄一条已有的规则，只改三处：
   - `ruleName`
-  - `resourceList`，每项写成 `{resourceId, resourceName}`
+  - `resourceList`，每项照已有规则带类型外壳：`{type: "object", value: {resourceId: {type: "string", value: <流程ID>}, resourceName: {type: "string", value: <流程名>}}}`，整个是 `{type: "array", value: [...]}`（实测，2026-11-15）
   - `_id`，换成随机的 21 位字母数字，别和老规则重复
 
   发消息的节点从老告警流程的草稿里整个读出来，原样放进去（凭证和群都在里面），这样校验就能全部通过。
+- HTTP 节点的请求体在 `parameters.raw_body.value.content`，是分字段的对象 `{type: "object", value: {字段: {type: "string", value: …}}}`，不是一段 JSON 字符串；数字字段写 `{type: "number", value: 10}`。字段值可以写成引用 `{type: "spel", value: {node_tree: {t: "json_path", path: "$.script-1.result.job"}, expression: "_(\"$.script-1.result.job\")"}}`。照抄一个 HTTP 节点换新 ID 时，`errorHandler` 里带节点 ID 的 `id`（如 `http-client-1.error_handler.default`）也跟着换。（实测，2026-11-15：一条转发流程这样写，调试时对方收到了各个字段）
+- 出错处理「重试，还失败…」：`errorHandler.defaultStrategy` 是 `{action: "retry", retryFallbackAction: "ignore"}`；`retryFallbackAction` 换成 `terminate` 校验也能过（只校验过，没实测重试用完以后的样子）。
+- 往已有流程里插一个节点：`steps` 加节点，`structure` 对应位置加 `{id, type: "normal", subSteps: null}`。插进分支里，就找到那条路径（如 `branch-1.default`）往它的 `subSteps` 里放。流程中途有「结束」节点的，要在结束前面也插一份，不然走那条路就到不了末尾。（实测，2026-11-15：13 条已有流程这样加，读回只多新节点和 `structure`，校验 0 错；发布后线上和草稿一致，启用状态没变）
+- 删数据存储里的一个键：`DELETE /api/ud/project/<项目ID>/datastorage/dataitem/delete`，体 `{dataset_id, key, keys: [key]}`，回 `code 0`，读回只少了这一个键（实测，2026-11-15；`key` 和 `keys` 哪个起作用没分开试）。界面上删要点，接口不用。
 - 分支条件数组里，每一项是普通对象 `{operator, comparison}`，外面不要再包一层 `{type: "object", value: …}`。包了以后校验报「请输入…节点的分支条件」。
 - 分支条件左边引用脚本出参（如 `$.script-1.result.notify`）时，平台从 `handler` 最后 `return` 的那个对象字面量里认字段。脚本经内部函数返回（`return done(200)`）时，校验报同一句「请输入…节点的分支条件」，界面上条件也显示成空的。把 `handler` 收尾改成直接返回字面量（`var r = run(input); return {status: r.status, notify: r.notify, …};`），同一份草稿校验 0 错。上一条的包装去掉了还报这句，就查这个。（实测，2026-11-15，一条流程改前改后各校验一次）
 - 节点描述太长会报 `errorStepDescLengthExceed`：63 字能过，109 字过不了。
