@@ -200,10 +200,21 @@
 
   返回里 `data.request` 是真正发出去的请求，`data.testResult.testStatus` 是 `Success` 或 `Failure`，`data.output` 是出参。
 
+  入参最外层就是普通对象，只有每个字段的值包类型。把整个入参再包一层 `{"type": "object", "value": …}`，回 `15000000`，`errorDetail` 是 `unmarshal from paramJSON failed`。（实测，2026-11-15）
+
+  `authKey` 也能填工作流凭证的 ID，就是 `GET /webapi/connection_profiles` 里的 `id`。用户在凭证里贴好密钥后，拿它试跑一个不花钱的只读操作（比如查余额），就知道这把密钥能不能用，不用跑整条流程。返回的 `data.connection.id` 是这次实际用的凭证；填一个不存在的 ID 回 `code 5`，不会退回去用测试数据。（实测，2026-11-15）
+
   一个 58 个操作的连接器，就是这样用脚本串起来全部试跑的：先建一批名字带「测试」的临时数据（分组 → 清单 → 任务 → 评论……），后一步用前一步返回的 ID，最后逐个删掉。两个教训：
 
   - 写脚本前先看清每个操作的返回长什么样。同一个服务里，有的操作直接返回对象，有的外面多包一层 `result`；取 ID 取错位置，后面一串都会跟着拿到空值，看起来像连接器坏了。
   - 试跑前先确认每种临时数据都删得掉。这次「新建习惯」没有对应的删除接口，留下了一条只能归档、要人手动删的测试数据。
+
+**在工作流里用已发布的连接器。**（实测，2026-11-15）
+
+- 工作流节点的 `operation.connectorId` 是已发布版本的 ID（上面 `versions` 接口的 `versionId`），`operationId` 是这个版本里的操作 ID，和连接器开发页、草稿里的操作 ID 都不一样。
+- 查版本里的操作 ID：`GET /webapi/tenant_assets/current/connectors/<连接器 key>/versions/<版本ID>`，`data.actions[]` 是分组，每组 `items[]` 有 `id` 和 `alias`。连接器 key 是草稿里的 `key`（`GET /webapi/v3/connector_drafts/<草稿ID>`）。流程编辑页打开时也是调这个接口加载节点。
+- 画布上节点 ID 的前缀就是连接器 key，比如 `<key>-1`。换连接器时节点 ID 跟着换，下游引用 `$.<节点ID>.…` 和 `structure` 里的 ID 要一起改。
+- 节点的「凭证」页点「新建应用凭证」，表单是凭证名称、要连接的应用、凭证版本（新版）、API Key。勾着「同时完成连接」点「创建」，草稿里这个节点的 `auth.credentials` 就自动填上了新凭证。
 
 **发布。**「版本与发布」→「发布」分两步：
 
