@@ -214,7 +214,7 @@ variable.pageToken
   - 写入会整个覆盖草稿，所以先把读到的旧定义存一份。
 - 写完校验：`POST /webapi/flows/<流程ID>/v2/validate`，请求体 `{"isPublish": false, "validateMode": 1}`。`data.results` 按节点列出问题，比如没选凭证是 `errorRequireCredentials`。
   - 校验 0 错不等于能跑：它不查分支条件的操作符名（见下面「不为空」那条）。写完至少点一次「调试」，看调试接口的返回。
-- 调试接口：点「调试」时页面发 `POST /webapi/projects/<项目ID>/flows/<流程ID>/debug`，请求体 `{triggerOutput: "<触发器输出的 JSON 文字>", variableGroupId}`，成功回 `data.flowInstanceId`。预检不过也回 HTTP 200，错误码和原因只在 body 的 `code`、`msg` 里，界面不弹提示，看着像点了没反应。要看原因，先在页面里包一层 `fetch`，把这个接口的返回存下来再点。（实测，2026-11-12） `variableGroupId` 用不着就别带：带空字符串回 `15000000`（`unmarshal "" into int64`）。（实测，2026-11-14）
+- 调试接口：点「调试」时页面发 `POST /webapi/projects/<项目ID>/flows/<流程ID>/debug`，请求体 `{triggerOutput: "<触发器输出的 JSON 文字>", variableGroupId}`，成功回 `data.flowInstanceId`。预检不过也回 HTTP 200，错误码和原因只在 body 的 `code`、`msg` 里，界面不弹提示，看着像点了没反应。要看原因，先在页面里包一层 `fetch`，把这个接口的返回存下来再点。（实测，2026-11-12） `variableGroupId` 用不着就别带：带空字符串回 `15000000`（`unmarshal "" into int64`）。（实测，2026-11-14） 网址触发的流程，流程里没用到触发器输出时，`triggerOutput` 给一个空壳就能跑：`{"headers":{},"path":"","method":"POST","query":{},"body":{},"body_message":"","content_length":0}`。发布前的 `validate_variable` 请求体给 `{}`，没引用项目配置时回 `validateResult: []`。（实测，2026-11-17）
   - 想测空列表、没带参数这类少见的输入，别在弹窗的代码框里打字（会自动补括号引号）。同样在包的那层 `fetch` 里，把请求体的 `triggerOutput` 换成自己拼好的 JSON 文字再发出去。调试一样会真的写表，只造不写表或写回原值的输入。（实测，2026-11-12）
   - 发卡片的流程调试时不发进真群：流程里有「按 `open_message_id` 原地更新卡片」分支的（卡片上的刷新按钮走这条），调试输入里带一个假的 `open_message_id`，卡片照常组装，最后「更新卡片消息」那步因为消息编号不存在而失败，什么也没发出去。卡片变量的值看「组装卡片」那步的节点日志。发送节点一个字没改，发布前也就不用改回去。（实测，2026-11-14）
   - 调试运行的节点日志：`POST /webapi/flow_log/search_node_log`，请求体 `{flowInstanceID, page, pageSize, debug: true}`。不带 `debug: true` 查不到调试那次。（实测，2026-11-14）
