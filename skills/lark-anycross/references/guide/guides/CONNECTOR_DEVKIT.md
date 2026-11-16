@@ -200,6 +200,8 @@
 
   返回里 `data.request` 是真正发出去的请求，`data.testResult.testStatus` 是 `Success` 或 `Failure`，`data.output` 是出参。
 
+  `data.output` 是对方返回的整个 body，不按操作的出参定义过滤；原样的返回在 `data.response.objectBody`（`rawBody` 是字符串）。所以要核对出参定义写得对不对，得拿返回和操作的 `outputSchema` 逐个字段比，拿 `output` 和返回比永远一致。（实测，2026-11-16）
+
   入参最外层就是普通对象，只有每个字段的值包类型。把整个入参再包一层 `{"type": "object", "value": …}`，回 `15000000`，`errorDetail` 是 `unmarshal from paramJSON failed`。（实测，2026-11-15）
 
   `authKey` 也能填工作流凭证的 ID，就是 `GET /webapi/connection_profiles` 里的 `id`。用户在凭证里贴好密钥后，拿它试跑一个不花钱的只读操作（比如查余额），就知道这把密钥能不能用，不用跑整条流程。返回的 `data.connection.id` 是这次实际用的凭证；填一个不存在的 ID 回 `code 5`，不会退回去用测试数据。（实测，2026-11-15）
@@ -302,6 +304,8 @@
 
 分清「令牌无效」和「令牌有效但没权限」：同一个接口再用一个假令牌（比如全 0 的 UUID）调一次做对照。假令牌回的和你的一样，就是令牌无效；不一样（比如假的回 401，你的回「Access is denied」），就是令牌有效、只是没权限。有的对方在令牌无效时会把请求里的令牌原样放进返回内容，所以打印试跑结果前要把令牌格式的串全遮掉，不能只遮请求头里那一处。（实测，2026-11-14）
 
+只遮令牌格式也不够：使用的人贴错了东西（比如把密码当令牌贴进去），对方照样原样回显，而它不是 UUID 的样子。对方回 401 时，返回里的 `data` 整个别打印，只看 `code` 和 `msg`。（实测，2026-11-16）
+
 **对方的文档常常和实际返回不一致。**实测一份文档有这些出入：
 
 - 成功码写的是 200，实际是 0。
@@ -329,6 +333,17 @@
 - 建完认证后，页面会跳到一个用草稿 ID 拼的地址，显示「认证不存在或已被删除」。换成连接器 ID 打开 `…/connector-v2/<连接器ID>/authentication/<认证ID>` 就好。「认证与授权」页也一样：草稿 ID 的地址会显示过时的「未发布」，用连接器 ID 重开再勾。
 - 发布认证后，回「认证与授权」点「编辑」，勾上它，点「保存」。
 - 批量试跑照 §7：`GET /webapi/devkit/auth_drafts/<认证ID>/connections` 列出测试数据，状态是 `connected` 的那条，拿它的 `id` 当 `authKey`。打印时只看键名，别把 `rawInput` 里的密钥打出来。
+- API Key 认证的草稿接口是 `GET` / `PUT /webapi/v2/api_key_auth/authentication_drafts/<认证ID>`，整个对象改完 `PUT` 回去。表单在 `inputPresent`（字符串化的 JSON）和 `inputSchema` 里；令牌插件是 `extensions[0].sourceCode`。（实测，2026-11-16）
+  - 表单默认有 `apiKey`、`baseURL`（输入框）、`proxyGroup` 三格。`baseURL` 可以照 OAuth2 认证改成「正式环境 / 测试环境」单选，`inputSchema` 里同时加 `enum` 和 `required`。
+  - 对方给的令牌常常连着 `Bearer ` 一起发，使用的人会整串贴进来。插件里先 `String(ctx.authInput.apiKey || '').trim().replace(/^Bearer\s+/i, '')` 再加 `Bearer `，带不带前缀都能用。
+- 认证测试数据贴错了，可以改：「测试数据」下拉里，鼠标移到那一条上，有铅笔（编辑）和垃圾桶（删除）。编辑框里有「保存并测试」。（实测，2026-11-16）
+- 同一个服务内，每种认证类型只能建一个（新建认证的弹窗上写着）。一个连接器可以同时勾两种认证，比如前台接口用客户端凭证，后台接口用管理员令牌。
+
+**一个连接器挂了两种认证时，可以规定每个操作只认哪一种。**（实测，2026-11-16）
+
+- 界面：操作的「基本信息」→「编辑」→「操作支持的认证方式」，下拉里选。留空就是两种都能用。
+- 背后是操作对象的 `supportedAuthTypes`：默认 `["NoLimit"]`，只认 API Key 时是 `["api_key"]`。填的是认证类型，不是认证 ID；同一服务里每种类型只有一个认证，所以不会混。
+- 批量改：`GET …/actions` 拿完整对象，只换 `supportedAuthTypes`，补 `"referredByThis": []` 再 `PUT`。改完把其余字段和改之前逐个比一遍。
 
 **调试台给文件入参准备了一张示例图**「AnyCross.png」，值是 `{"type": "file", "value": {"file_key": "anycross/file/devkit/anycross-icon", "file_size": 3144}}`，用接口试跑时可以直接用。文件入参的值都是这个形状（`file_key`、`file_name`、`file_size`）；一个操作出参里的文件，可以原样塞给另一个操作的文件入参。（实测，2026-11-15）
 
