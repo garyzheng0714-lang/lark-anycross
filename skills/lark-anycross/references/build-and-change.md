@@ -54,6 +54,8 @@
   - 导出：`GET /webapi/projects/-/flows/<工作流ID>/export?name=<名称>`。脚本连续下载会被 Chrome 拦，多份合成一个文件，新开一个同源标签页只下载一次。
   - 复制：`POST /webapi/projects/<原项目ID>/flows/<工作流ID>/duplicate`，`{name, targetProject}`，返回新 `flowID`。副本是草稿。每步 `operation` 只剩组件 ID 和动作 ID，触发器换了新的回调地址或 `hookKey`。比对时排除这几处。
   - 删除：`DELETE /webapi/projects/<项目ID>/flows/<工作流ID>`，体 `{}`。删了无法恢复。
+  - 删空文件夹：`DELETE /webapi/projects/<项目ID>/folders/<文件夹 id>`，体 `{}`。（实测，2026-11-17）
+  - 从没发布过的整个项目：把里面的流程逐条复制进备份项目、比对一致后，直接删项目，不用先逐条删流程；项目配置跟着没，删前把配置项的名字记下来（值可能是密钥，不导出）。（实测，2026-11-17）
   - 批量删：删前逐条核原件在、名字对、40 天 0 次运行、副本在备份文件夹里；每条删前再查一次运行次数。删完回读文件树核对。一次删几十条可能被 Claude Code 安全检查拦下，先把逐条清单给用户确认。（实测，2026-11）
 
 ## 改动的固定循环
