@@ -180,7 +180,7 @@ variable.pageToken
 - 写接口要带请求头 `x-csrf-token`，值是 cookie `anycross_csrf_token`。监控页接口不带它时报 CSRF 无效（实测）；带上后建文件夹、挪动、改名都通过。
 - 这个 token 会换。原来好好的调用突然回 `code 15100011`、`data` 里只有 `troubleshooting`，就是它过期了：重新从 cookie 读一次再调。（实测，2026-11-15，项目列表接口）
 - 页面里一段 JS 跑超过约 45 秒，浏览器插件报 `Runtime.evaluate timed out`，可页面里的脚本还在跑。连着调试几次这种长活，把结果存进 `window` 变量，过一会儿再读。（实测，2026-11-15）
-- 建文件夹：`POST /webapi/projects/<项目ID>/folders`，`{parentFileID: <文件树根节点 id>, name}`。文件树根节点 `type 4`，文件夹 `type 3`，工作流 `type 2`。界面「+」→「新建文件夹」先建成「未命名文件夹1」，再改名。连着建两个时第二个回过一次失败（没有 `data`），重试就成了；刚建完的文件夹隔一两秒才出现在文件树里，回读确认再往里挪。（实测，2026-11-14）
+- 建文件夹：`POST /webapi/projects/<项目ID>/folders`，`{parentFileID: <文件树根节点 id>, name}`。文件树根节点 `type 4`，文件夹 `type 3`，工作流 `type 2`。界面「+」→「新建文件夹」先建成「未命名文件夹1」，再改名。连着建两个时第二个回过一次失败（没有 `data`），重试就成了；刚建完的文件夹隔一两秒才出现在文件树里，回读确认再往里挪。（实测，2026-11-14）新建的文件夹排在文件树最前面，连着建几个，排出来的顺序和建的先后正好相反；要哪个顺序就倒着建，或者建完用 `position: 0` 再排。（实测，2026-11-17）
 - 文件夹改名：`PATCH /webapi/projects/<项目ID>/folders/<文件夹 id>`，`{name}`。
 - 挪进文件夹：`POST /webapi/projects/<项目ID>/files/batch_move`，`{fileIDs: [...], referenceFileID: <文件夹 id>, position: 2}`。`fileIDs` 是文件树节点的 `id`，不是工作流 ID（`resourceID`）。一次可挪一批，挪进去的顺序就是 `fileIDs` 的顺序。`position: 0` 是挪到 `referenceFileID` 那一项的前面（同一层），拿来排文件夹的先后。（实测，2026-11-14）
 - 批量改项目名（2026-11-12 实测改 18 个）：刚打开控制台时页面会自己跳到某条工作流，这时发出的读项目请求可能拿到空 `data`，脚本跑到一半就断了。每次读写都带重试；按「现名等于新名就跳过、等于旧名才改、都不是就停下报告」写，断了可以直接整段重跑，不会改两遍。改完用 `POST /webapi/project/detail/batch` 整体回读一次，核对名称和每个项目的 `flow.total`、`flow.runningCount`。
